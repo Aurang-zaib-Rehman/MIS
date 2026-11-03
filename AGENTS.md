@@ -145,3 +145,108 @@ src/
 - Don't add new context providers without a clear, broad need — prefer local state or composition.
 - Don't inline SVG markup in components — always add the `.svg` to `src/icons/` and export it from the barrel `index.ts`.
 - Don't use `styled-components`, CSS Modules, or any CSS-in-JS — Tailwind utility classes with `@utility` extensions in `index.css` are the only styling mechanism.
+
+---
+
+# PERMANENT DEVELOPMENT RULES — MADRASSA MIS
+
+These instructions apply to EVERY task, feature, module, page, component, and code modification throughout this project.
+
+## 1. EXISTING CODE FIRST — NEVER REBUILD UNNECESSARILY
+
+Before implementing anything, inspect the existing codebase.
+
+You MUST:
+- Search for existing components before creating new ones.
+- Reuse existing components wherever possible.
+- Customize existing components according to requirements.
+- Reuse existing tables, forms, buttons, inputs, dropdowns, modals, dialogs, cards, charts, calendars, notifications, navigation, and layouts.
+- Reuse existing hooks, utilities, API services, validation schemas, and design tokens.
+- Extend existing components rather than creating duplicate versions.
+- Use configuration and props to make components reusable.
+- Follow the existing project architecture and naming conventions.
+
+### Concrete Reusability Mappings:
+- **Tables**: Customize `src/components/ui/table/` and existing table patterns (`BasicTableOne`, `RecentOrders`) for Students, Teachers, Fees, Results, and Attendance.
+- **Forms & Inputs**: Reuse `src/components/form/` primitives (`InputField`, `Select`, `MultiSelect`, `Checkbox`, `Radio`, `date-picker`, `DropZone`) for admission, student registration, fee collection, and marks entry.
+- **Navigation & Sidebar**: Make existing `AppSidebar` role-aware (Admin, Teacher, Student) rather than creating separate sidebars.
+- **Layouts**: Reuse `AppLayout` for Admin, Teacher, and Student dashboard shells.
+- **Modals**: Reuse `src/components/ui/modal/` and `useModal` hook for Add, Edit, View, and Delete operations.
+- **UI Elements**: Reuse `Button`, `Badge`, `Alert`, `Avatar`, `Dropdown`, `ComponentCard`.
+
+## 2. CREATE NEW COMPONENTS ONLY WHEN NECESSARY
+
+Before creating a new component:
+1. Search the entire codebase for similar functionality.
+2. Check whether an existing component can be extended.
+3. Check whether existing components can be composed together.
+4. Prefer reusable, configurable components.
+5. Create a new component only if no suitable existing component exists.
+*Never create duplicate components with different names but identical functionality.*
+
+## 3. PERFORMANCE AND SCALABILITY
+
+The application must be smooth, fast, maintainable, and scalable:
+- Avoid unnecessary component re-renders.
+- Avoid unnecessary API requests.
+- Use pagination for large datasets.
+- Use server-side filtering and searching when appropriate.
+- Use lazy loading for routes and heavy components.
+- Optimize database queries and indexes.
+- Avoid unnecessary dependencies.
+- Avoid duplicated API calls.
+- Use appropriate caching where beneficial.
+- Keep components modular and maintainable.
+- Avoid oversized components and unnecessary abstractions.
+- Optimize images and static assets.
+- Handle loading, empty, success, and error states.
+- Use responsive design for desktop, tablet, and mobile.
+*Do not sacrifice code readability or maintainability for premature optimization.*
+
+## 4. CODE QUALITY AND SECURITY
+
+- Use TypeScript consistently throughout the project.
+- Follow existing coding conventions and file patterns.
+- Validate inputs on both frontend and backend.
+- Handle errors properly with informative feedback.
+- Protect sensitive information.
+- Enforce authorization on the backend (never trust frontend-only role restrictions).
+- Use secure authentication practices.
+- Never expose passwords, JWT secrets, or environment variables.
+- Avoid hardcoded production credentials.
+
+## 5. TESTING IS MANDATORY AFTER EVERY TASK
+
+Testing is NOT optional. After completing each development task:
+- **A. UNIT TESTING**: Test newly created or modified components, functions, validation rules, service functions, states, and permission logic.
+- **B. INTEGRATION TESTING**: Test interactions between integrated components, frontend/backend communication, API requests/responses, and ensure existing features remain unbroken.
+- **C. REGRESSION TESTING**: Verify previously working functionality; check that shared components still work everywhere they are used.
+- **D. BUILD AND QUALITY CHECKS**: Run TypeScript checks (`tsc`), linting, and production build. Resolve any errors introduced.
+*Never claim a test passed unless you actually executed it.*
+
+## 6. REPORT AFTER EVERY TASK (10-POINT MANDATORY REPORT)
+
+After completing each task, provide:
+1. **What was implemented**
+2. **Which existing components were reused**
+3. **Which components were modified**
+4. **Whether any new components were created and why**
+5. **Files created, modified, or deleted**
+6. **Unit testing results**
+7. **Integration testing results**
+8. **Regression testing results**
+9. **Build and TypeScript results**
+10. **Known issues or remaining work**
+
+## 7. STRICT DEVELOPMENT CONTROL
+
+- Implement only the task requested.
+- Do not implement future phases without approval.
+- Do not change unrelated functionality.
+- Do not rewrite working code unnecessarily.
+- Do not change the database design or business rules without discussing first.
+- Ask before introducing major architectural changes.
+- If a requirement conflicts with existing functionality, explain the conflict before changing anything.
+
+**CORE DIRECTIVE**:
+**REUSE FIRST → CUSTOMIZE SECOND → CREATE NEW ONLY WHEN NECESSARY → TEST EVERYTHING → REPORT RESULTS.**

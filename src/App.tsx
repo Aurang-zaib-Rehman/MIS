@@ -1,23 +1,41 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import AppLayout from "./layout/AppLayout";
+import PublicLayout from "./layout/public/PublicLayout";
+
+// Public Pages
+import PublicHome from "./pages/Public/Home";
+import About from "./pages/Public/About";
+import Courses from "./pages/Public/Courses";
+import Teachers from "./pages/Public/Teachers";
+import Admission from "./pages/Public/Admission";
+import Fundraising from "./pages/Public/Fundraising";
+import Contact from "./pages/Public/Contact";
+
+// Auth Pages
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
+
+// Dashboard & Internal Pages
+import DashboardHome from "./pages/Dashboard/Ecommerce";
+import UserProfiles from "./pages/UserProfiles";
 import Calendar from "./pages/Calendar";
-import BarChart from "./pages/Charts/BarChart";
-import LineChart from "./pages/Charts/LineChart";
-import Home from "./pages/Dashboard/Ecommerce";
 import FormElements from "./pages/Forms/FormElements";
+import BasicTables from "./pages/Tables/BasicTables";
 import Blank from "./pages/OtherPage/Blank";
 import NotFound from "./pages/OtherPage/NotFound";
-import BasicTables from "./pages/Tables/BasicTables";
+
+// Charts
+import LineChart from "./pages/Charts/LineChart";
+import BarChart from "./pages/Charts/BarChart";
+
+// UI Elements
 import Alerts from "./pages/UiElements/Alerts";
 import Avatars from "./pages/UiElements/Avatars";
 import Badges from "./pages/UiElements/Badges";
 import Buttons from "./pages/UiElements/Buttons";
 import Images from "./pages/UiElements/Images";
 import Videos from "./pages/UiElements/Videos";
-import UserProfiles from "./pages/UserProfiles";
 
 export default function App() {
   return (
@@ -25,11 +43,23 @@ export default function App() {
       <Router>
         <ScrollToTop />
         <Routes>
-          {/* Dashboard Layout */}
-          <Route element={<AppLayout />}>
-            <Route index path="/" element={<Home />} />
+          {/* Public Website Layout (Accessible without login) */}
+          <Route element={<PublicLayout />}>
+            <Route index path="/" element={<PublicHome />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/teachers" element={<Teachers />} />
+            <Route path="/admission" element={<Admission />} />
+            <Route path="/admissions" element={<Admission />} />
+            <Route path="/fundraising" element={<Fundraising />} />
+            <Route path="/contact" element={<Contact />} />
+          </Route>
 
-            {/* Others Page */}
+          {/* Authenticated Dashboard Layout (Preserving all existing dashboard pages) */}
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<DashboardHome />} />
+
+            {/* Other Pages */}
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
@@ -40,7 +70,7 @@ export default function App() {
             {/* Tables */}
             <Route path="/basic-tables" element={<BasicTables />} />
 
-            {/* Ui Elements */}
+            {/* UI Elements */}
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/avatars" element={<Avatars />} />
             <Route path="/badge" element={<Badges />} />
@@ -53,7 +83,7 @@ export default function App() {
             <Route path="/bar-chart" element={<BarChart />} />
           </Route>
 
-          {/* Auth Layout */}
+          {/* Auth Layout Pages */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
 

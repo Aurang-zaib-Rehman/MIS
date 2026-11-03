@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
     icon: <GridIcon fontSize={24} />,
     name: "Dashboard",
     key: "dashboard",
-    subItems: [{ name: "Ecommerce", key: "ecommerceHome", path: "/" }],
+    subItems: [{ name: "Ecommerce", key: "ecommerceHome", path: "/dashboard" }],
   },
   {
     icon: <CalenderIcon fontSize={24} />,
