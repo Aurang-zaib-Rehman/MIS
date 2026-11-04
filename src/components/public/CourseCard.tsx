@@ -25,7 +25,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   showEnrollBtn = true,
 }) => {
   return (
-    <div className="flex h-full flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs transition-all hover:border-brand-300 hover:shadow-theme-md dark:border-gray-800 dark:bg-gray-900/60 dark:hover:border-brand-700">
+    <div className="flex h-full flex-col justify-between rounded-2xl border border-gray-200/90 bg-white p-6 shadow-theme-xs transition-all hover:border-brand-300 hover:shadow-theme-md dark:border-gray-800 dark:bg-gray-900 dark:hover:border-brand-700">
       <div>
         {/* Top Badges */}
         <div className="flex items-center justify-between gap-2 mb-4">

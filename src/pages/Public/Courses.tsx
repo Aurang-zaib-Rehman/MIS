@@ -188,7 +188,7 @@ export const Courses: React.FC = () => {
         ]}
       />
 
-      <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">
+      <section className="bg-gray-100 py-16 transition-colors sm:py-20 dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Department Filter Tabs */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-12">

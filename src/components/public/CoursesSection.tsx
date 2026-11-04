@@ -26,7 +26,7 @@ const featuredCourses: CourseItem[] = [
     department: "Shoba-e-Hifz",
     description:
       "Foundational phonetics and fluent reading of Quranic Arabic for children and beginners with authentic pronunciation.",
-    duration: "6–12 Months",
+    duration: "12-18 Months",
     timings: "Morning & Evening Options",
     badge: "Foundational",
     badgeColor: "info",
@@ -39,10 +39,10 @@ const featuredCourses: CourseItem[] = [
   {
     id: "dars-nizami-prelim",
     title: "Dars-e-Nizami: Darja Oola to Salisa",
-    department: "Shoba-e-Kutub (Dars-e-Nizami)",
+    department: "Shoba-e-Dars-e-Nizami",
     description:
       "Comprehensive introduction to Arabic grammar (Nahw & Sarf), introductory Fiqh, and foundational Islamic jurisprudence.",
-    duration: "3 Academic Years",
+    duration: "8 Academic Years",
     timings: "4:00 AM – 9:00 AM (Morning Shift)",
     badge: "Wafaq Board",
     badgeColor: "primary",
@@ -58,7 +58,7 @@ const featuredCourses: CourseItem[] = [
     department: "Shoba-e-Hadith",
     description:
       "Final graduate degree encompassing in-depth analysis of Sihah-e-Sitta (Bukhari, Muslim, Tirmidhi, Abu Dawood, Nasai, Ibn Majah).",
-    duration: "1 Year (Final Master's Level)",
+    duration: "1 Year (Master's Level)",
     timings: "Full Day Academic Timetable",
     badge: "Shahadat-ul-Almiya",
     badgeColor: "warning",
@@ -84,17 +84,17 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
     : featuredCourses;
 
   return (
-    <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">
+    <section className="border-y border-gray-200 bg-gray-100 py-16 transition-colors sm:py-20 dark:border-gray-800 dark:bg-gray-950">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+          <span className="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
             Authentic Islamic Curriculum
           </span>
           <h2 className="mt-2 font-outfit text-3xl font-extrabold text-gray-900 sm:text-4xl dark:text-white">
             Academic &amp; Religious Programs
           </h2>
-          <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base dark:text-gray-400">
+          <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base dark:text-gray-300">
             Structured in rigorous accordance with Wafaq-ul-Madaris Al-Arabia Pakistan,
             offering sequential Quranic and traditional Dars-e-Nizami pathways.
           </p>

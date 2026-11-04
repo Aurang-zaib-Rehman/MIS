@@ -8,7 +8,7 @@ export const MohtamimDesk: React.FC = () => {
         <div className="text-center lg:col-span-4 lg:text-start">
           <div className="relative mx-auto size-44 overflow-hidden rounded-2xl border-4 border-brand-100 bg-gray-100 shadow-theme-md sm:size-52 lg:mx-0 dark:border-brand-900/40 dark:bg-gray-800">
             <img
-              src="/images/user/owner.png"
+              src="/images/user/muhtamim.jpeg"
               alt="Mohtamim / Principal"
               className="size-full object-cover"
             />
@@ -33,30 +33,30 @@ export const MohtamimDesk: React.FC = () => {
           </div>
 
           <h2 className="font-outfit text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl dark:text-white">
-            &ldquo;Imparting Ilm with Adab and Modern Management&rdquo;
+            &ldquo;Imparting Islamic Ilm with Adab, Sunnah &amp; Tarbiyah&rdquo;
           </h2>
 
           <div className="space-y-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
             <p>
               In the name of Allah, the Most Gracious, the Most Merciful. All praise is due to
-              Allah, and blessings upon our beloved Prophet Muhammad (ﷺ).
+              Allah, and blessings upon our beloved Prophet Muhammad (ﷺ), his family, and companions.
             </p>
             <p>
               At Madrasa Uloom-e-Islamia, our sacred trust is to preserve the authentic sciences of
-              the Quran and Sunnah while cultivating rigorous moral character (Akhlaq) in each
-              student. We believe that true Islamic learning flourishes when high academic
-              scholarship is paired with transparent, disciplined institutional administration.
+              the Quran and Sunnah while cultivating reverence (Adab) and righteous character (Akhlaq-e-Hasana)
+              in every Talib-e-Ilm. We believe that beneficial knowledge (Ilm-e-Nafe&apos;) must be accompanied
+              by sincere devotion (Ikhlas), humility, and steadfast adherence to the prophetic Sunnah.
             </p>
             <p>
-              With our new digital Management Information System, we ensure that every period of
-              attendance, daily Sabaq progression, term examination, and financial record is
-              maintained with accuracy and accountability. We welcome all aspiring seekers of knowledge
-              to our peaceful campus.
+              Under the recognized curriculum of Wafaq-ul-Madaris Al-Arabia Pakistan, our learned Asateeza
+              diligently supervise each student&apos;s daily Sabaq, Tajweed articulation, Dars-e-Nizami
+              comprehension, and moral upbringing. We warmly welcome all dedicated seekers of Islamic
+              knowledge to our disciplined and spiritually uplifting campus.
             </p>
           </div>
 
           <div className="pt-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-            <span>Official Desk of the Mohtamim · Jamia &amp; Madrasa Uloom-e-Islamia</span>
+            <span>Hazrat Maulana Mufti Mian Saeed Akbar · Mohtamim &amp; Sheikh-ul-Hadith</span>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ const facultyList: TeacherProfile[] = [
     department: "Shoba-e-Hadith & Fiqh",
     qualification: "Shahadat-ul-Almiya, Takhassus fi al-Ifta",
     specialty: "Sahih al-Bukhari, Islamic Jurisprudence & Fatwa",
-    image: "/images/user/owner.png",
+    image: "/images/user/muhtamim.jpeg",
     experienceYears: 28,
   },
   {

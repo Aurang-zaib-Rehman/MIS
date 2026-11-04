@@ -56,7 +56,7 @@ export const Home: React.FC = () => {
       <WhyChooseUsSection />
 
       {/* Mohtamim / Director Desk Highlight */}
-      <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">
+      <section className="border-y border-gray-200 bg-gray-100 py-16 transition-colors sm:py-20 dark:border-gray-800 dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-10 text-center">
             <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
@@ -82,7 +82,11 @@ export const Home: React.FC = () => {
       {/* Admission Callout Section */}
       <section className="border-y border-gray-200 bg-white py-16 transition-colors dark:border-gray-800 dark:bg-gray-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-900 via-brand-800 to-gray-900 p-8 text-white sm:p-12">
+          <div className="relative overflow-hidden rounded-3xl border border-brand-400/40 bg-gradient-to-r from-brand-800 via-brand-700 to-brand-800 p-8 text-white shadow-2xl shadow-brand-950/30 sm:p-12">
+            {/* Ambient inner soft glow */}
+            <div className="pointer-events-none absolute -end-16 -top-16 size-72 rounded-full bg-white/10 blur-3xl" />
+            <div className="pointer-events-none absolute -start-10 -bottom-10 size-60 rounded-full bg-brand-500/20 blur-2xl" />
+
             <div className="relative z-1 max-w-2xl space-y-4">
               <span className="rounded-full bg-brand-500/30 px-3 py-1 text-xs font-semibold text-brand-200 border border-brand-400/30">
                 Admissions Session 1447–1448 AH
