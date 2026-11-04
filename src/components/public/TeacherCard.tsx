@@ -29,7 +29,7 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({ teacher }) => {
               className="size-full object-cover"
               onError={(e) => {
                 // Fallback to placeholder if image fails
-                (e.target as HTMLImageElement).src = "/images/user/user-01.jpg";
+                (e.target as HTMLImageElement).src = "/images/user/staff.jpeg";
               }}
             />
           </div>

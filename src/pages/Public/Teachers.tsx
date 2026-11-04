@@ -23,7 +23,7 @@ const facultyList: TeacherProfile[] = [
     department: "Shoba-e-Hadith",
     qualification: "Shahadat-ul-Almiya, M.A Islamic Studies",
     specialty: "Sahih Muslim, Sunan at-Tirmidhi, Usul-ul-Hadith",
-    image: "/images/user/user-02.jpg",
+    image: "/images/user/staff.jpeg",
     experienceYears: 20,
   },
   {
@@ -33,7 +33,7 @@ const facultyList: TeacherProfile[] = [
     department: "Shoba-e-Dars-e-Nizami",
     qualification: "Shahadat-ul-Almiya, Dar-ul-Ifta Sanad",
     specialty: "Al-Hidaya, Usul-ush-Shashi, Arabic Balaghat",
-    image: "/images/user/user-03.jpg",
+    image: "/images/user/staff.jpeg",
     experienceYears: 14,
   },
   {
@@ -43,7 +43,7 @@ const facultyList: TeacherProfile[] = [
     department: "Shoba-e-Dars-e-Nizami",
     qualification: "Shahadat-ul-Almiya (Wafaq Gold Medalist)",
     specialty: "Ilm-us-Sarf, Kafiyah, Maqamat-e-Hariri",
-    image: "/images/user/user-04.jpg",
+    image: "/images/user/staff.jpeg",
     experienceYears: 11,
   },
 
@@ -55,7 +55,7 @@ const facultyList: TeacherProfile[] = [
     department: "Shoba-e-Hifz & Tajweed",
     qualification: "Qira'at-e-Sab'a Sanad, Hafiz-ul-Quran",
     specialty: "Shatibiyyah, Jazariyyah, Advanced Makharij Articulation",
-    image: "/images/user/user-05.jpg",
+    image: "/images/user/staff.jpeg",
     experienceYears: 18,
   },
   {
@@ -65,7 +65,7 @@ const facultyList: TeacherProfile[] = [
     department: "Shoba-e-Hifz",
     qualification: "Hafiz-ul-Quran, Shahadah fi Tajweed",
     specialty: "Sabaq & Manzil Memorization Discipline",
-    image: "/images/user/user-06.jpg",
+    image: "/images/user/staff.jpeg",
     experienceYears: 15,
   },
   {
@@ -75,17 +75,17 @@ const facultyList: TeacherProfile[] = [
     department: "Shoba-e-Hifz",
     qualification: "Hafiz-ul-Quran, Sanad Tajweed",
     specialty: "Foundational Phonetics & Child Pedagogy",
-    image: "/images/user/user-07.jpg",
+    image: "/images/user/staff.jpeg",
     experienceYears: 9,
   },
   {
     id: "t8",
-    name: "Maulana Aneela Qamar",
+    name: "Maulana Qamar khan",
     designation: "Lecturer in Arabic Syntax & Islamic History",
     department: "Shoba-e-Dars-e-Nizami",
     qualification: "Shahadat-ul-Almiya, BS Computer Science",
     specialty: "Seerat-un-Nabi, Islamic History & Digital Records",
-    image: "/images/user/user-08.jpg",
+    image: "/images/user/staff.jpeg",
     experienceYears: 8,
   },
 ];
@@ -97,10 +97,10 @@ export const Teachers: React.FC = () => {
     selectedDept === "all"
       ? facultyList
       : facultyList.filter((t) =>
-          selectedDept === "hifz"
-            ? t.department.includes("Hifz")
-            : t.department.includes("Hadith") || t.department.includes("Nizami")
-        );
+        selectedDept === "hifz"
+          ? t.department.includes("Hifz")
+          : t.department.includes("Hadith") || t.department.includes("Nizami")
+      );
 
   return (
     <>
@@ -145,31 +145,28 @@ export const Teachers: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
             <button
               onClick={() => setSelectedDept("all")}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
-                selectedDept === "all"
+              className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${selectedDept === "all"
                   ? "bg-brand-500 text-white shadow-theme-xs"
                   : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-              }`}
+                }`}
             >
               All Faculty ({facultyList.length})
             </button>
             <button
               onClick={() => setSelectedDept("nizami")}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
-                selectedDept === "nizami"
+              className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${selectedDept === "nizami"
                   ? "bg-brand-500 text-white shadow-theme-xs"
                   : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-              }`}
+                }`}
             >
               Hadith &amp; Dars-e-Nizami Faculty
             </button>
             <button
               onClick={() => setSelectedDept("hifz")}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
-                selectedDept === "hifz"
+              className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${selectedDept === "hifz"
                   ? "bg-brand-500 text-white shadow-theme-xs"
                   : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-              }`}
+                }`}
             >
               Hifz &amp; Tajweed Asateeza
             </button>
