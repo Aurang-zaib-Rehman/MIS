@@ -296,6 +296,32 @@
   background-color: #344054;
 }
 
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatDelayed {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+@utility animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+@utility animate-float-delayed {
+  animation: floatDelayed 7s ease-in-out infinite;
+}
+
 @layer utilities {
   /* For Remove Date Icon */
   input[type="date"]::-webkit-inner-spin-button,
