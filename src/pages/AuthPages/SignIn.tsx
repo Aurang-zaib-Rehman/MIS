@@ -6,10 +6,10 @@ export default function SignIn() {
   return (
     <>
       <PageMeta
-        title="React.js SignIn Dashboard | TailAdmin - React.js Admin Dashboard Template"
-        description="This is React.js SignIn Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title="Sign In | Madrasa Uloom-e-Islamia Portal"
+        description="Portal Sign In for Faculty, Administrators, and Students of Madrasa Uloom-e-Islamia."
       />
-      <AuthLayout>
+      <AuthLayout image="/images/login.jfif">
         <SignInForm />
       </AuthLayout>
     </>

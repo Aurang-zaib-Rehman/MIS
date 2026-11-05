@@ -72,6 +72,7 @@ export const Admission: React.FC = () => {
           { label: "Home", path: "/" },
           { label: "Admissions" },
         ]}
+        backgroundImage="/images/admission_banner.jpeg"
       />
 
       <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">

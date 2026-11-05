@@ -71,6 +71,7 @@ export const About: React.FC = () => {
           { label: "Home", path: "/" },
           { label: "About Us" },
         ]}
+        backgroundImage="/images/about_banner.jpeg"
       />
 
       {/* Core Highlights Grid */}

@@ -9,7 +9,7 @@ export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   return (
-    <div className="no-scrollbar flex w-full flex-1 flex-col overflow-y-auto lg:w-1/2">
+    <div className="no-scrollbar flex w-full flex-1 flex-col overflow-y-auto px-4 pb-12 sm:px-6 sm:pb-16 lg:w-1/2 lg:px-8">
       <div className="mx-auto mb-5 w-full max-w-md sm:pt-10">
         <Link
           to="/"
@@ -30,8 +30,8 @@ export default function SignUpForm() {
             </p>
           </div>
           <div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
-              <button className="inline-flex items-center justify-center gap-3 rounded-lg bg-gray-100 px-7 py-3 text-sm font-normal text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
+            <div className="flex justify-center">
+              <button className="inline-flex w-full items-center justify-center gap-3 rounded-lg bg-gray-100 px-7 py-3 text-sm font-normal text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
                 <svg
                   width="20"
                   height="20"
@@ -57,19 +57,6 @@ export default function SignUpForm() {
                   />
                 </svg>
                 Sign up with Google
-              </button>
-              <button className="inline-flex items-center justify-center gap-3 rounded-lg bg-gray-100 px-7 py-3 text-sm font-normal text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
-                <svg
-                  width="21"
-                  className="fill-current"
-                  height="20"
-                  viewBox="0 0 21 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M15.6705 1.875H18.4272L12.4047 8.75833L19.4897 18.125H13.9422L9.59717 12.4442L4.62554 18.125H1.86721L8.30887 10.7625L1.51221 1.875H7.20054L11.128 7.0675L15.6705 1.875ZM14.703 16.475H16.2305L6.37054 3.43833H4.73137L14.703 16.475Z" />
-                </svg>
-                Sign up with X
               </button>
             </div>
             <div className="relative py-3 sm:py-5">
@@ -171,7 +158,7 @@ export default function SignUpForm() {
               </div>
             </form>
 
-            <div className="mt-5">
+            <div className="mt-5 pb-6 sm:pb-8">
               <p className="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
                 Already have an account?{" "}
                 <Link

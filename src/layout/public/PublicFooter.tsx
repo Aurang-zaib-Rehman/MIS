@@ -207,6 +207,39 @@ export const PublicFooter: React.FC = () => {
             </Link>
           </div>
         </div>
+
+        {/* Developer Credits */}
+        <div className="mt-4 border-t border-white/10 pt-4 text-center text-xs text-gray-400">
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            <span>Developed by</span>
+            <a
+              href="https://www.linkedin.com/in/haseeb-shoaib-rare-69100225b/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-brand-300 transition-colors hover:text-white hover:underline"
+            >
+              M Haseeb
+            </a>
+            <span className="text-gray-500">•</span>
+            <a
+              href="https://www.linkedin.com/in/aurang-zaib-rehman/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-brand-300 transition-colors hover:text-white hover:underline"
+            >
+              Aurang Zaib Rehman
+            </a>
+            <span className="text-gray-500">•</span>
+            <a
+              href="https://www.linkedin.com/in/aneela-qamar-19586b322"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-brand-300 transition-colors hover:text-white hover:underline"
+            >
+              Aneela Qamar
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );

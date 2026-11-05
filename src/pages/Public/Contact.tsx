@@ -19,6 +19,7 @@ export const Contact: React.FC = () => {
           { label: "Home", path: "/" },
           { label: "Contact Us" },
         ]}
+        backgroundImage="/images/contact_banner.jpeg"
       />
 
       <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">
@@ -112,18 +113,6 @@ export const Contact: React.FC = () => {
                       Saturday &amp; Sunday: Off (Closed)
                     </p>
                   </div>
-                </div>
-              </div>
-
-              {/* Interactive Map Embed */}
-              <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
-                <div className="aspect-video w-full overflow-hidden rounded-xl bg-gray-200 dark:bg-gray-800">
-                  <iframe
-                    title="Madrasa Uloom-e-Islamia Location"
-                    src="https://maps.google.com/maps?q=Mardan,%20Khyber%20Pakhtunkhwa,%20Pakistan&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                    className="h-full w-full border-0"
-                    loading="lazy"
-                  ></iframe>
                 </div>
               </div>
             </div>

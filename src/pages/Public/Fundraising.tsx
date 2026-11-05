@@ -75,6 +75,7 @@ export const Fundraising: React.FC = () => {
           { label: "Home", path: "/" },
           { label: "Fundraising & Donations" },
         ]}
+        backgroundImage="/images/donation_banner.jpeg"
       />
 
       <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">

@@ -116,6 +116,7 @@ export const Teachers: React.FC = () => {
           { label: "Home", path: "/" },
           { label: "Teachers & Faculty" },
         ]}
+        backgroundImage="/images/teachers_banner.jpeg"
       />
 
       {/* Mohtamim Spotlight */}
