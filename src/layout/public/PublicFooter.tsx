@@ -209,7 +209,7 @@ export const PublicFooter: React.FC = () => {
         </div>
 
         {/* Developer Credits */}
-        <div className="mt-4 border-t border-white/10 pt-4 text-center text-xs text-gray-400">
+        {/* <div className="mt-4 border-t border-white/10 pt-4 text-center text-xs text-gray-400">
           <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
             <span>Developed by</span>
             <a
@@ -239,7 +239,7 @@ export const PublicFooter: React.FC = () => {
               Aneela Qamar
             </a>
           </p>
-        </div>
+        </div> */}
       </div>
     </footer>
   );
