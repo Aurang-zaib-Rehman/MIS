@@ -1,5 +1,6 @@
 import { BoxCubeIcon, CheckCircleIcon, ClockIcon, DollarLineIcon, UserIcon } from "@/icons";
 import React from "react";
+import { MotionFadeIn, MotionStaggerContainer, MotionStaggerItem } from "./Motion";
 
 interface FeatureItem {
   title: string;
@@ -58,43 +59,46 @@ export const WhyChooseUsSection: React.FC = () => {
     <section className="bg-white py-16 transition-colors sm:py-20 dark:bg-gray-900">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
-            Why Choose Madrasa Uloom-e-Islamia
-          </span>
-          <h2 className="mt-2 font-outfit text-3xl font-extrabold text-gray-900 sm:text-4xl dark:text-white">
-            Nurturing Knowledge, Character &amp; Faith
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base dark:text-gray-400">
-            We provide a holistic educational ecosystem where authentic Islamic sciences
-            are imparted in an organized, modern, and morally uplifting atmosphere.
-          </p>
-        </div>
+        <MotionFadeIn direction="down" duration={0.6}>
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+              Why Choose Madrasa Uloom-e-Islamia
+            </span>
+            <h2 className="mt-2 font-outfit text-3xl font-extrabold text-gray-900 sm:text-4xl dark:text-white">
+              Nurturing Knowledge, Character &amp; Faith
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base dark:text-gray-400">
+              We provide a holistic educational ecosystem where authentic Islamic sciences
+              are imparted in an organized, modern, and morally uplifting atmosphere.
+            </p>
+          </div>
+        </MotionFadeIn>
 
         {/* Features Grid */}
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <MotionStaggerContainer className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((item, idx) => (
-            <div
-              key={idx}
-              className="group relative rounded-2xl border border-gray-200 bg-gray-50/50 p-6 transition-all hover:border-brand-300 hover:bg-white hover:shadow-theme-md dark:border-gray-800 dark:bg-white/3 dark:hover:border-brand-700 dark:hover:bg-gray-800/80"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex size-12 items-center justify-center rounded-xl bg-white shadow-theme-xs transition-transform group-hover:scale-110 dark:bg-gray-800">
-                  {item.icon}
+            <MotionStaggerItem key={idx} direction="up" distance={25}>
+              <div
+                className="group relative rounded-2xl border border-gray-200 bg-gray-50/50 p-6 transition-all hover:border-brand-300 hover:bg-white hover:shadow-theme-md dark:border-gray-800 dark:bg-white/3 dark:hover:border-brand-700 dark:hover:bg-gray-800/80"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex size-12 items-center justify-center rounded-xl bg-white shadow-theme-xs transition-transform group-hover:scale-110 dark:bg-gray-800">
+                    {item.icon}
+                  </div>
+                  <span className="rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-semibold text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+                    {item.badge}
+                  </span>
                 </div>
-                <span className="rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-semibold text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
-                  {item.badge}
-                </span>
+                <h3 className="font-outfit text-lg font-bold text-gray-900 dark:text-white">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  {item.description}
+                </p>
               </div>
-              <h3 className="font-outfit text-lg font-bold text-gray-900 dark:text-white">
-                {item.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                {item.description}
-              </p>
-            </div>
+            </MotionStaggerItem>
           ))}
-        </div>
+        </MotionStaggerContainer>
       </div>
     </section>
   );

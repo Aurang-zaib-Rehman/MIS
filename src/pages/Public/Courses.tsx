@@ -1,6 +1,7 @@
 import PageMeta from "@/components/common/PageMeta";
 import PublicPageBanner from "@/components/public/PublicPageBanner";
 import CourseCard, { type CourseItem } from "@/components/public/CourseCard";
+import { MotionFadeIn, MotionStaggerContainer, MotionStaggerItem } from "@/components/public/Motion";
 import React, { useState } from "react";
 import { Link } from "react-router";
 
@@ -192,7 +193,7 @@ export const Courses: React.FC = () => {
       <section className="bg-gray-100 py-16 transition-colors sm:py-20 dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Department Filter Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+          <MotionFadeIn direction="down" duration={0.5} className="flex flex-wrap items-center justify-center gap-2 mb-12">
             <button
               onClick={() => setSelectedDept("all")}
               className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition-all ${
@@ -223,17 +224,19 @@ export const Courses: React.FC = () => {
             >
               Shoba-e-Dars-e-Nizami (8 Darjat)
             </button>
-          </div>
+          </MotionFadeIn>
 
           {/* Courses Catalog Grid */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <MotionStaggerContainer key={selectedDept} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
+              <MotionStaggerItem key={course.id} direction="up">
+                <CourseCard course={course} />
+              </MotionStaggerItem>
             ))}
-          </div>
+          </MotionStaggerContainer>
 
           {/* Admission Callout Footer */}
-          <div className="mt-16 rounded-3xl border border-brand-200 bg-white p-8 text-center shadow-theme-sm dark:border-gray-800 dark:bg-gray-900">
+          <MotionFadeIn direction="up" delay={0.2} className="mt-16 rounded-3xl border border-brand-200 bg-white p-8 text-center shadow-theme-sm dark:border-gray-800 dark:bg-gray-900">
             <h3 className="font-outfit text-2xl font-bold text-gray-900 dark:text-white">
               Ready to Begin Your Islamic Academic Journey?
             </h3>
@@ -255,7 +258,7 @@ export const Courses: React.FC = () => {
                 Inquire about Eligibility
               </Link>
             </div>
-          </div>
+          </MotionFadeIn>
         </div>
       </section>
     </>

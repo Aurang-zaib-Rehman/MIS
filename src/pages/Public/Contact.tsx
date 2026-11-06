@@ -1,6 +1,7 @@
 import PageMeta from "@/components/common/PageMeta";
 import PublicPageBanner from "@/components/public/PublicPageBanner";
 import ContactForm from "@/components/public/ContactForm";
+import { MotionFadeIn } from "@/components/public/Motion";
 import { CallIcon, ClockIcon, EnvelopeIcon, MapIcon } from "@/icons";
 import React from "react";
 
@@ -25,8 +26,8 @@ export const Contact: React.FC = () => {
       <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-            {/* Left Column: Direct Channels & Map */}
-            <div className="space-y-6 lg:col-span-5">
+            {/* Left Column: Direct Channels & Map (glides in from left) */}
+            <MotionFadeIn direction="left" className="space-y-6 lg:col-span-5">
               <div>
                 <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
                   Admissions &amp; Administration
@@ -115,12 +116,12 @@ export const Contact: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </MotionFadeIn>
 
-            {/* Right Column: Interactive Form */}
-            <div className="lg:col-span-7">
+            {/* Right Column: Interactive Form (glides in from right) */}
+            <MotionFadeIn direction="right" className="lg:col-span-7">
               <ContactForm />
-            </div>
+            </MotionFadeIn>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from "@/icons";
 import React from "react";
 import { Link } from "react-router";
+import { MotionFadeIn } from "@/components/public/Motion";
 
 interface BreadcrumbItem {
   label: string;
@@ -37,7 +38,7 @@ export const PublicPageBanner: React.FC<PublicPageBannerProps> = ({
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="max-w-xl lg:max-w-2xl">
+        <MotionFadeIn direction="down" duration={0.6} className="max-w-xl lg:max-w-2xl">
           {/* Breadcrumb nav */}
           <nav className="mb-2 flex items-center gap-1.5 text-xs text-brand-200">
             {breadcrumbs.map((crumb, idx) => (
@@ -69,7 +70,7 @@ export const PublicPageBanner: React.FC<PublicPageBannerProps> = ({
               {description}
             </p>
           )}
-        </div>
+        </MotionFadeIn>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import PageMeta from "@/components/common/PageMeta";
 import PublicPageBanner from "@/components/public/PublicPageBanner";
 import MohtamimDesk from "@/components/public/MohtamimDesk";
 import TeacherCard, { type TeacherProfile } from "@/components/public/TeacherCard";
+import { MotionFadeIn, MotionStaggerContainer, MotionStaggerItem } from "@/components/public/Motion";
 import React, { useState } from "react";
 
 const facultyList: TeacherProfile[] = [
@@ -129,7 +130,7 @@ export const Teachers: React.FC = () => {
       {/* Faculty Directory */}
       <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center mb-10">
+          <MotionFadeIn direction="down" className="mx-auto max-w-2xl text-center mb-10">
             <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
               Departmental Faculty
             </span>
@@ -140,10 +141,10 @@ export const Teachers: React.FC = () => {
               Every instructor undergoes strict academic verification and possesses recognized Wafaq
               credentials before assuming teaching duties.
             </p>
-          </div>
+          </MotionFadeIn>
 
           {/* Filter Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+          <MotionFadeIn direction="down" delay={0.1} className="flex flex-wrap items-center justify-center gap-2 mb-10">
             <button
               onClick={() => setSelectedDept("all")}
               className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${selectedDept === "all"
@@ -171,14 +172,16 @@ export const Teachers: React.FC = () => {
             >
               Hifz &amp; Tajweed Asateeza
             </button>
-          </div>
+          </MotionFadeIn>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <MotionStaggerContainer key={selectedDept} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {filteredTeachers.map((teacher) => (
-              <TeacherCard key={teacher.id} teacher={teacher} />
+              <MotionStaggerItem key={teacher.id} direction="up">
+                <TeacherCard teacher={teacher} />
+              </MotionStaggerItem>
             ))}
-          </div>
+          </MotionStaggerContainer>
         </div>
       </section>
     </>

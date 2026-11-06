@@ -4,6 +4,7 @@ import BankDetailsCard from "@/components/public/BankDetailsCard";
 import DonationCampaignCard, {
   type DonationCampaign,
 } from "@/components/public/DonationCampaignCard";
+import { MotionFadeIn, MotionStaggerContainer, MotionStaggerItem } from "@/components/public/Motion";
 import { CheckCircleIcon } from "@/icons";
 import React, { useRef } from "react";
 
@@ -81,7 +82,7 @@ export const Fundraising: React.FC = () => {
       <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Spiritual Quote Banner */}
-          <div className="mb-14 rounded-3xl border border-success-200 bg-gradient-to-r from-success-50/70 via-white to-brand-50/40 p-8 text-center dark:border-gray-800 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+          <MotionFadeIn direction="down" className="mb-14 rounded-3xl border border-success-200 bg-gradient-to-r from-success-50/70 via-white to-brand-50/40 p-8 text-center dark:border-gray-800 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
             <span className="rounded-full bg-success-500/15 px-3 py-1 text-xs font-semibold text-success-700 dark:text-success-400">
               The Virtue of Sadaqah Jariyah
             </span>
@@ -93,11 +94,11 @@ export const Fundraising: React.FC = () => {
             <p className="mt-2 text-xs font-semibold text-gray-500 dark:text-gray-400">
               — Sahih Muslim 1631
             </p>
-          </div>
+          </MotionFadeIn>
 
           {/* Active Campaigns Grid */}
           <div className="mb-16">
-            <div className="text-center max-w-2xl mx-auto mb-10">
+            <MotionFadeIn direction="down" className="text-center max-w-2xl mx-auto mb-10">
               <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
                 Active Projects &amp; Causes
               </span>
@@ -108,26 +109,29 @@ export const Fundraising: React.FC = () => {
                 Every rupee is tracked transparently in our digital financial ledger and utilized
                 strictly in compliance with Shariah guidelines.
               </p>
-            </div>
+            </MotionFadeIn>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <MotionStaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {campaigns.map((camp) => (
-                <DonationCampaignCard
-                  key={camp.id}
-                  campaign={camp}
-                  onDonateClick={scrollToBankDetails}
-                />
+                <MotionStaggerItem key={camp.id} direction="up">
+                  <DonationCampaignCard
+                    campaign={camp}
+                    onDonateClick={scrollToBankDetails}
+                  />
+                </MotionStaggerItem>
               ))}
-            </div>
+            </MotionStaggerContainer>
           </div>
 
           {/* Transparent Bank Details Section */}
-          <div ref={bankDetailsRef}>
-            <BankDetailsCard />
-          </div>
+          <MotionFadeIn direction="left" className="w-full">
+            <div ref={bankDetailsRef}>
+              <BankDetailsCard />
+            </div>
+          </MotionFadeIn>
 
           {/* Zakat & Shariah Compliance Notice */}
-          <div className="mt-12 rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
+          <MotionFadeIn direction="right" className="mt-12 rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
             <h4 className="font-outfit font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <CheckCircleIcon className="size-5 text-success-500" />
               <span>Zakat &amp; Financial Governance Policy</span>
@@ -138,7 +142,7 @@ export const Fundraising: React.FC = () => {
               and destitute Talaba) following the Tamleek verification process supervised by our
               scholarly Shariah board.
             </p>
-          </div>
+          </MotionFadeIn>
         </div>
       </section>
     </>

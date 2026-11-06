@@ -1,6 +1,7 @@
 import PageMeta from "@/components/common/PageMeta";
 import PublicPageBanner from "@/components/public/PublicPageBanner";
 import AdmissionInquiryForm from "@/components/public/AdmissionInquiryForm";
+import { MotionFadeIn, MotionStaggerContainer, MotionStaggerItem } from "@/components/public/Motion";
 import { CheckCircleIcon, CalenderIcon } from "@/icons";
 import React from "react";
 
@@ -78,7 +79,7 @@ export const Admission: React.FC = () => {
       <section className="bg-gray-50 py-16 transition-colors sm:py-20 dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Key Dates Banner */}
-          <div className="mb-12 rounded-2xl border border-brand-200 bg-brand-50/80 p-5 dark:border-brand-900/50 dark:bg-brand-950/40 sm:p-6">
+          <MotionFadeIn direction="up" className="mb-12 rounded-2xl border border-brand-200 bg-brand-50/80 p-5 dark:border-brand-900/50 dark:bg-brand-950/40 sm:p-6">
             <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
               <div className="flex items-center gap-3">
                 <div className="flex size-11 items-center justify-center rounded-xl bg-brand-500 text-white">
@@ -97,76 +98,74 @@ export const Admission: React.FC = () => {
                 Registration Active
               </span>
             </div>
-          </div>
+          </MotionFadeIn>
 
           {/* Admission Steps */}
           <div className="mb-16">
-            <div className="text-center max-w-2xl mx-auto mb-10">
+            <MotionFadeIn direction="down" className="text-center max-w-2xl mx-auto mb-10">
               <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
                 Simple 4-Step Pathway
               </span>
               <h2 className="mt-1 font-outfit text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
                 How to Complete Your Admission
               </h2>
-            </div>
+            </MotionFadeIn>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <MotionStaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {steps.map((st) => (
-                <div
-                  key={st.num}
-                  className="relative rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs transition-all hover:border-brand-300 dark:border-gray-800 dark:bg-gray-900"
-                >
-                  <span className="font-outfit text-3xl font-extrabold text-brand-500/20 dark:text-brand-400/20">
-                    {st.num}
-                  </span>
-                  <h3 className="mt-2 font-outfit text-lg font-bold text-gray-900 dark:text-white">
-                    {st.title}
-                  </h3>
-                  <p className="mt-2 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
-                    {st.desc}
-                  </p>
-                </div>
+                <MotionStaggerItem key={st.num} direction="up">
+                  <div className="h-full relative rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs transition-all hover:border-brand-300 dark:border-gray-800 dark:bg-gray-900">
+                    <span className="font-outfit text-3xl font-extrabold text-brand-500/20 dark:text-brand-400/20">
+                      {st.num}
+                    </span>
+                    <h3 className="mt-2 font-outfit text-lg font-bold text-gray-900 dark:text-white">
+                      {st.title}
+                    </h3>
+                    <p className="mt-2 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                      {st.desc}
+                    </p>
+                  </div>
+                </MotionStaggerItem>
               ))}
-            </div>
+            </MotionStaggerContainer>
           </div>
 
           {/* Eligibility Requirements Cards */}
           <div className="mb-16">
-            <div className="text-center max-w-2xl mx-auto mb-10">
+            <MotionFadeIn direction="down" className="text-center max-w-2xl mx-auto mb-10">
               <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
                 Departmental Guidelines
               </span>
               <h2 className="mt-1 font-outfit text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
                 Eligibility Criteria &amp; Documentation
               </h2>
-            </div>
+            </MotionFadeIn>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <MotionStaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {eligibilityCriteria.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900"
-                >
-                  <h4 className="font-outfit text-base font-bold text-gray-900 dark:text-white">
-                    {item.darja}
-                  </h4>
-                  <ul className="mt-4 space-y-2 text-xs text-gray-600 dark:text-gray-300">
-                    {item.requirements.map((req, rIdx) => (
-                      <li key={rIdx} className="flex items-start gap-2">
-                        <CheckCircleIcon className="size-4 shrink-0 mt-0.5 text-brand-500" />
-                        <span>{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <MotionStaggerItem key={idx} direction="up">
+                  <div className="h-full rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
+                    <h4 className="font-outfit text-base font-bold text-gray-900 dark:text-white">
+                      {item.darja}
+                    </h4>
+                    <ul className="mt-4 space-y-2 text-xs text-gray-600 dark:text-gray-300">
+                      {item.requirements.map((req, rIdx) => (
+                        <li key={rIdx} className="flex items-start gap-2">
+                          <CheckCircleIcon className="size-4 shrink-0 mt-0.5 text-brand-500" />
+                          <span>{req}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </MotionStaggerItem>
               ))}
-            </div>
+            </MotionStaggerContainer>
           </div>
 
           {/* Admission Form Section */}
-          <div className="mx-auto max-w-4xl">
+          <MotionFadeIn direction="up" delay={0.2} className="mx-auto max-w-4xl">
             <AdmissionInquiryForm />
-          </div>
+          </MotionFadeIn>
         </div>
       </section>
     </>

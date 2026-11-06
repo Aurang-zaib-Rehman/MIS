@@ -2,6 +2,7 @@ import CourseCard, { type CourseItem } from "./CourseCard";
 import { ArrowRightIcon } from "@/icons";
 import React from "react";
 import { Link } from "react-router";
+import { MotionFadeIn, MotionStaggerContainer, MotionStaggerItem } from "./Motion";
 
 const featuredCourses: CourseItem[] = [
   {
@@ -87,37 +88,43 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
     <section className="border-y border-gray-200 bg-gray-100 py-16 transition-colors sm:py-20 dark:border-gray-800 dark:bg-gray-950">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
-            Authentic Islamic Curriculum
-          </span>
-          <h2 className="mt-2 font-outfit text-3xl font-extrabold text-gray-900 sm:text-4xl dark:text-white">
-            Academic &amp; Religious Programs
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base dark:text-gray-300">
-            Structured in rigorous accordance with Wafaq-ul-Madaris Al-Arabia Pakistan,
-            offering sequential Quranic and traditional Dars-e-Nizami pathways.
-          </p>
-        </div>
+        <MotionFadeIn direction="down" duration={0.6}>
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+              Authentic Islamic Curriculum
+            </span>
+            <h2 className="mt-2 font-outfit text-3xl font-extrabold text-gray-900 sm:text-4xl dark:text-white">
+              Academic &amp; Religious Programs
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base dark:text-gray-300">
+              Structured in rigorous accordance with Wafaq-ul-Madaris Al-Arabia Pakistan,
+              offering sequential Quranic and traditional Dars-e-Nizami pathways.
+            </p>
+          </div>
+        </MotionFadeIn>
 
         {/* Courses Cards Grid */}
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <MotionStaggerContainer className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {displayedCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
+            <MotionStaggerItem key={course.id} direction="up" distance={25}>
+              <CourseCard course={course} />
+            </MotionStaggerItem>
           ))}
-        </div>
+        </MotionStaggerContainer>
 
         {/* Bottom CTA */}
         {showViewAll && (
-          <div className="mt-12 text-center">
-            <Link
-              to="/courses"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400"
-            >
-              <span>View All Department Levels &amp; Syllabi</span>
-              <ArrowRightIcon className="size-4 rtl:rotate-180" />
-            </Link>
-          </div>
+          <MotionFadeIn direction="up" delay={0.2}>
+            <div className="mt-12 text-center">
+              <Link
+                to="/courses"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400"
+              >
+                <span>View All Department Levels &amp; Syllabi</span>
+                <ArrowRightIcon className="size-4 rtl:rotate-180" />
+              </Link>
+            </div>
+          </MotionFadeIn>
         )}
       </div>
     </section>

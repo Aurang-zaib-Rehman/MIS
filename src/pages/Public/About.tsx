@@ -1,6 +1,7 @@
 import PageMeta from "@/components/common/PageMeta";
 import PublicPageBanner from "@/components/public/PublicPageBanner";
 import MohtamimDesk from "@/components/public/MohtamimDesk";
+import { MotionFadeIn, MotionStaggerContainer, MotionStaggerItem } from "@/components/public/Motion";
 import { CheckCircleIcon, ShootingStarIcon, StarFill } from "@/icons";
 import React from "react";
 import { Link } from "react-router";
@@ -77,33 +78,32 @@ export const About: React.FC = () => {
       {/* Core Highlights Grid */}
       <section className="bg-white py-16 transition-colors dark:bg-gray-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
+          <MotionFadeIn direction="down" className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
               Institutional Pillars
             </span>
             <h2 className="mt-2 font-outfit text-3xl font-extrabold text-gray-900 sm:text-4xl dark:text-white">
               Built Upon Decades of Sincere Service
             </h2>
-          </div>
+          </MotionFadeIn>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <MotionStaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {coreHighlights.map((item, idx) => (
-              <div
-                key={idx}
-                className="rounded-2xl border border-gray-200 bg-gray-50/50 p-6 transition-all hover:bg-white hover:shadow-theme-md dark:border-gray-800 dark:bg-white/3 dark:hover:bg-gray-800/80"
-              >
-                <div className="flex size-10 items-center justify-center rounded-xl bg-brand-500 text-white mb-4">
-                  <CheckCircleIcon className="size-5" />
+              <MotionStaggerItem key={idx} direction="up">
+                <div className="h-full rounded-2xl border border-gray-200 bg-gray-50/50 p-6 transition-all hover:bg-white hover:shadow-theme-md dark:border-gray-800 dark:bg-white/3 dark:hover:bg-gray-800/80">
+                  <div className="flex size-10 items-center justify-center rounded-xl bg-brand-500 text-white mb-4">
+                    <CheckCircleIcon className="size-5" />
+                  </div>
+                  <h3 className="font-outfit text-lg font-bold text-gray-900 dark:text-white">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                    {item.description}
+                  </p>
                 </div>
-                <h3 className="font-outfit text-lg font-bold text-gray-900 dark:text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
-                  {item.description}
-                </p>
-              </div>
+              </MotionStaggerItem>
             ))}
-          </div>
+          </MotionStaggerContainer>
         </div>
       </section>
 
@@ -111,8 +111,8 @@ export const About: React.FC = () => {
       <section className="bg-gray-50 py-16 transition-colors dark:bg-gray-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {/* Card 1: Our Mission */}
-            <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
+            {/* Card 1: Our Mission (glides in from left) */}
+            <MotionFadeIn direction="left" className="rounded-3xl border border-gray-200 bg-white p-8 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
               <div className="inline-flex size-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-400 mb-5">
                 <ShootingStarIcon className="size-6" />
               </div>
@@ -138,10 +138,10 @@ export const About: React.FC = () => {
                   <span>Equitable access for orphans and financially challenged Talaba</span>
                 </li>
               </ul>
-            </div>
+            </MotionFadeIn>
 
-            {/* Card 2: Our Vision */}
-            <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
+            {/* Card 2: Our Vision (glides in from right) */}
+            <MotionFadeIn direction="right" className="rounded-3xl border border-gray-200 bg-white p-8 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
               <div className="inline-flex size-12 items-center justify-center rounded-2xl bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-400 mb-5">
                 <StarFill className="size-6" />
               </div>
@@ -167,7 +167,7 @@ export const About: React.FC = () => {
                   <span>Fostering unity, moderation, and compassionate communal leadership</span>
                 </li>
               </ul>
-            </div>
+            </MotionFadeIn>
           </div>
         </div>
       </section>
@@ -175,7 +175,7 @@ export const About: React.FC = () => {
       {/* Facilities Section */}
       <section className="bg-white py-16 transition-colors dark:bg-gray-900 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center mb-12">
+          <MotionFadeIn direction="down" className="mx-auto max-w-2xl text-center mb-12">
             <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
               Campus Infrastructure
             </span>
@@ -185,23 +185,22 @@ export const About: React.FC = () => {
             <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               Designed to support a disciplined, focused, and healthy student routine.
             </p>
-          </div>
+          </MotionFadeIn>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <MotionStaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {facilities.map((fac, idx) => (
-              <div
-                key={idx}
-                className="rounded-2xl border border-gray-200 bg-gray-50/50 p-6 dark:border-gray-800 dark:bg-white/3"
-              >
-                <h4 className="font-outfit text-lg font-bold text-gray-900 dark:text-white">
-                  {fac.name}
-                </h4>
-                <p className="mt-2 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
-                  {fac.description}
-                </p>
-              </div>
+              <MotionStaggerItem key={idx} direction="up">
+                <div className="h-full rounded-2xl border border-gray-200 bg-gray-50/50 p-6 dark:border-gray-800 dark:bg-white/3">
+                  <h4 className="font-outfit text-lg font-bold text-gray-900 dark:text-white">
+                    {fac.name}
+                  </h4>
+                  <p className="mt-2 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                    {fac.description}
+                  </p>
+                </div>
+              </MotionStaggerItem>
             ))}
-          </div>
+          </MotionStaggerContainer>
         </div>
       </section>
 
@@ -214,7 +213,7 @@ export const About: React.FC = () => {
 
       {/* Admission CTA Strip */}
       <section className="bg-brand-900 py-12 text-center text-white">
-        <div className="mx-auto max-w-4xl px-4">
+        <MotionFadeIn direction="up" className="mx-auto max-w-4xl px-4">
           <h3 className="font-outfit text-2xl font-bold sm:text-3xl">
             Join the Next Generation of Islamic Scholars
           </h3>
@@ -235,7 +234,7 @@ export const About: React.FC = () => {
               Explore Curriculum
             </Link>
           </div>
-        </div>
+        </MotionFadeIn>
       </section>
     </>
   );
