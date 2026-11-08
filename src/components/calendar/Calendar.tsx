@@ -32,6 +32,7 @@ import {
   CloseIcon,
 } from "./icons";
 import type { CalendarEvent, EventFormData } from "./types";
+import { useAuth } from "@/hooks/useAuth";
 
 const INITIAL_EVENTS: CalendarEvent[] = [
   {
@@ -59,6 +60,8 @@ const Calendar: React.FC = () => {
   const { language: locale, dir } = useLanguage();
   const isRtlLayout = dir === "rtl";
   const { theme } = useTheme();
+  const { currentUser } = useAuth();
+  const isAdmin = currentUser?.role === "ADMIN";
 
   const [events, setEvents] = useState<CalendarEvent[]>(INITIAL_EVENTS);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
@@ -93,6 +96,7 @@ const Calendar: React.FC = () => {
   };
 
   const handleDateSelect = (selectInfo: DateSelectInfo) => {
+    if (!isAdmin) return;
     const startStr = selectInfo.startStr
       ? selectInfo.startStr.split("T")[0]
       : "";
@@ -111,6 +115,11 @@ const Calendar: React.FC = () => {
     if (event.url) {
       window.open(event.url);
       clickInfo.jsEvent?.preventDefault();
+      return;
+    }
+
+    if (!isAdmin) {
+      // Non-admin roles (Teacher, Student) have view-only access
       return;
     }
 
@@ -210,7 +219,7 @@ const Calendar: React.FC = () => {
           direction={isRtlLayout ? "rtl" : "ltr"}
           // Toolbar Header configuration
           headerToolbar={{
-            start: "prev,next addEventButton",
+            start: isAdmin ? "prev,next addEventButton" : "prev,next",
             center: "title",
             end: "",
           }}
@@ -495,7 +504,8 @@ const Calendar: React.FC = () => {
               }
             });
           }}
-          selectable={true}
+          selectable={isAdmin}
+          editable={isAdmin}
           events={events}
           select={handleDateSelect}
           eventClick={handleEventClick}
