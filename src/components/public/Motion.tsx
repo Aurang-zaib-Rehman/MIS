@@ -17,8 +17,8 @@ export const MotionFadeIn: React.FC<MotionFadeInProps> = ({
   children,
   direction = "up",
   delay = 0,
-  duration = 0.5,
-  distance = 32,
+  duration = 0.4,
+  distance = 20,
   className = "",
   once = true,
   ...rest
@@ -43,7 +43,7 @@ export const MotionFadeIn: React.FC<MotionFadeInProps> = ({
     <motion.div
       initial={getInitialPosition()}
       whileInView={{ x: 0, y: 0, opacity: 1 }}
-      viewport={{ once, margin: "-40px" }}
+      viewport={{ once, margin: "0px" }}
       transition={{
         duration,
         delay,
@@ -62,7 +62,7 @@ export const MotionStaggerContainer: React.FC<{
   staggerDelay?: number;
   className?: string;
   once?: boolean;
-}> = ({ children, staggerDelay = 0.12, className = "", once = true }) => {
+}> = ({ children, staggerDelay = 0.06, className = "", once = true }) => {
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
@@ -78,7 +78,7 @@ export const MotionStaggerContainer: React.FC<{
       variants={containerVariants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once, margin: "-40px" }}
+      viewport={{ once, margin: "0px" }}
       className={className}
     >
       {children}
@@ -95,8 +95,8 @@ export const MotionStaggerItem: React.FC<{
 }> = ({
   children,
   direction = "up",
-  distance = 28,
-  duration = 0.5,
+  distance = 18,
+  duration = 0.38,
   className = "",
 }) => {
   const getInitial = () => {

@@ -5,33 +5,34 @@ export const MohtamimDesk: React.FC = () => {
   return (
     <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white p-6 shadow-theme-sm lg:p-10 dark:border-gray-800 dark:bg-gray-900">
       <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
-        {/* Left Side: Photo & Identity Card */}
+        {/* Left Side: Photo & Identity Card (Photo is static, text animates) */}
         <div className="text-center lg:col-span-4 lg:text-start">
-          <MotionFadeIn direction="left" duration={0.6}>
-            <div className="relative mx-auto size-44 overflow-hidden rounded-2xl border-4 border-brand-100 bg-gray-100 shadow-theme-md sm:size-52 lg:mx-0 dark:border-brand-900/40 dark:bg-gray-800">
-              <img
-                src="/images/user/muhtamim.jpeg"
-                alt="Mohtamim / Principal"
-                className="size-full object-cover"
-              />
-            </div>
-            <div className="mt-4">
-              <h3 className="font-outfit text-xl font-bold text-gray-900 dark:text-white">
-                Hazrat Maulana Mufti Mian Saeed Akbar
-              </h3>
-              <p className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
-                Mohtamim &amp; Sheikh-ul-Hadith
-              </p>
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Fazil-e-Dars-e-Nizami | Takhassus fi al-Fiqh
-              </p>
-            </div>
+          <div className="relative mx-auto size-44 overflow-hidden rounded-2xl border-4 border-brand-100 bg-gray-100 shadow-theme-md sm:size-52 lg:mx-0 dark:border-brand-900/40 dark:bg-gray-800">
+            <img
+              src="/images/user/muhtamim.jpeg"
+              alt="Mohtamim / Principal"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="size-full object-cover"
+            />
+          </div>
+          <MotionFadeIn direction="up" duration={0.4} className="mt-4">
+            <h3 className="font-outfit text-xl font-bold text-gray-900 dark:text-white">
+              Hazrat Maulana Mufti Mian Saeed Akbar
+            </h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+              Mohtamim &amp; Sheikh-ul-Hadith
+            </p>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Fazil-e-Dars-e-Nizami | Takhassus fi al-Fiqh
+            </p>
           </MotionFadeIn>
         </div>
 
         {/* Right Side: Message from Director / Mohtamim */}
         <div className="space-y-4 lg:col-span-8">
-          <MotionFadeIn direction="right" delay={0.15} duration={0.6}>
+          <MotionFadeIn direction="right" delay={0.1} duration={0.45}>
             <div className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
               <span>Message from the Mohtamim Desk</span>
             </div>

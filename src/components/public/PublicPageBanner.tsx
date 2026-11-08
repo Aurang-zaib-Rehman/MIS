@@ -25,11 +25,14 @@ export const PublicPageBanner: React.FC<PublicPageBannerProps> = ({
 }) => {
   return (
     <div className="relative overflow-hidden border-b border-gray-200 bg-gray-950 py-14 px-4 text-white sm:py-18 lg:py-22 sm:px-6 lg:px-8 dark:border-gray-800">
-      {/* Background image container */}
+      {/* Background image container - 100% STATIC, NO FRAMER MOTION */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <img
           src={backgroundImage}
           alt=""
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className={`h-full w-full object-cover ${imagePosition}`}
         />
         {/* Soft atmospheric gradient: deep navy/dark on text side (start), fading to transparent on child side (end) */}
@@ -38,7 +41,7 @@ export const PublicPageBanner: React.FC<PublicPageBannerProps> = ({
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        <MotionFadeIn direction="down" duration={0.6} className="max-w-xl lg:max-w-2xl">
+        <MotionFadeIn direction="down" duration={0.4} className="max-w-xl lg:max-w-2xl">
           {/* Breadcrumb nav */}
           <nav className="mb-2 flex items-center gap-1.5 text-xs text-brand-200">
             {breadcrumbs.map((crumb, idx) => (

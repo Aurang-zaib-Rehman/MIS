@@ -6,7 +6,7 @@ import { MotionFadeIn } from "./Motion";
 export const HeroSection: React.FC = () => {
   return (
     <section className="relative flex min-h-[calc(100vh-64px)] min-h-[calc(100dvh-64px)] items-center overflow-hidden bg-gray-950 py-12 sm:py-16 lg:py-0 text-white">
-      {/* Background Image with optimized visibility overlay (NO negative z-index) */}
+      {/* Background Image with optimized visibility overlay (100% STATIC, NO FRAMER MOTION) */}
       <div
         className="absolute inset-0 bg-cover bg-center pointer-events-none"
         style={{ backgroundImage: "url('/images/hero-mosque.jpg')" }}
@@ -14,6 +14,9 @@ export const HeroSection: React.FC = () => {
         <img
           src="/images/hero-mosque.jpg"
           alt="Madrasa Uloom-e-Islamia Campus"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className="size-full object-cover object-center"
         />
         {/* Balanced gradient: darker on left for text legibility, transparent on right so mosque shines through */}
@@ -27,7 +30,7 @@ export const HeroSection: React.FC = () => {
           {/* Left Column: Heading, description, and CTAs (Refined & Eye-Catching) */}
           <div className="space-y-4 sm:space-y-5 text-center lg:col-span-7 lg:text-start">
             {/* Main Headline (+5px increased text size) */}
-            <MotionFadeIn direction="down" duration={0.6}>
+            <MotionFadeIn direction="down" duration={0.45}>
               <h1 className="font-outfit text-3xl sm:text-[44px] lg:text-[46px] xl:text-[49px] font-extrabold tracking-tight text-white leading-tight sm:leading-snug lg:leading-[1.16] drop-shadow-md">
                 Excellence in{" "}
                 <span className="bg-gradient-to-r from-brand-200 via-blue-light-300 to-brand-400 bg-clip-text text-transparent">
@@ -38,7 +41,7 @@ export const HeroSection: React.FC = () => {
             </MotionFadeIn>
 
             {/* Description - Authentic Islamic Seminary */}
-            <MotionFadeIn direction="left" delay={0.15} duration={0.6}>
+            <MotionFadeIn direction="left" delay={0.08} duration={0.45}>
               <p className="mx-auto max-w-xl text-sm sm:text-base leading-relaxed text-gray-200/90 lg:mx-0 drop-shadow-xs">
                 Madrasa Uloom-e-Islamia is a distinguished seat of traditional Islamic sciences affiliated with{" "}
                 <strong className="text-white font-semibold">Wafaq-ul-Madaris Al-Arabia Pakistan</strong>,
@@ -49,7 +52,7 @@ export const HeroSection: React.FC = () => {
             </MotionFadeIn>
 
             {/* Action Buttons (with comfortable top spacing) */}
-            <MotionFadeIn direction="up" delay={0.3} duration={0.6}>
+            <MotionFadeIn direction="up" delay={0.15} duration={0.45}>
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start pt-4 sm:pt-6">
                 <Link
                   to="/admission"
@@ -70,7 +73,7 @@ export const HeroSection: React.FC = () => {
 
           {/* Right Column: Floating Stat Cards */}
           <div className="lg:col-span-5">
-            <MotionFadeIn direction="right" delay={0.25} duration={0.7}>
+            <MotionFadeIn direction="right" delay={0.12} duration={0.45}>
               <div className="mx-auto max-w-xs sm:max-w-sm lg:max-w-[360px] lg:ms-auto">
                 <div className="grid grid-cols-2 gap-3 sm:gap-3.5">
                   {/* Stat Card 1 - Floating Slow */}

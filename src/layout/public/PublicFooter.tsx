@@ -5,11 +5,13 @@ import { Link } from "react-router";
 export const PublicFooter: React.FC = () => {
   return (
     <footer className="relative overflow-hidden border-t border-brand-900/60 bg-[#041124] text-gray-200">
-      {/* Background Image Container */}
+      {/* Background Image Container - 100% STATIC, NO FRAMER MOTION */}
       <div className="absolute inset-0 pointer-events-none">
         <img
           src="/images/footer-mosque.jpg"
           alt="Islamic Mosque Silhouette"
+          loading="eager"
+          decoding="async"
           className="size-full object-cover object-[center_30%]"
         />
         {/* Harmonious midnight-blue gradient overlay: ensures high text readability while keeping the glowing blue mosque and minarets vibrant and eye-catching */}

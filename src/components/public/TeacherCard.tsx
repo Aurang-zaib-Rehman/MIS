@@ -26,6 +26,8 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({ teacher }) => {
             <img
               src={teacher.image}
               alt={teacher.name}
+              loading="eager"
+              decoding="async"
               className="size-full object-cover"
               onError={(e) => {
                 // Fallback to placeholder if image fails

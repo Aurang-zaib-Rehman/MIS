@@ -3,6 +3,7 @@ import Checkbox from "@/components/form/input/Checkbox";
 import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
+import { MotionFadeIn } from "@/components/public/Motion";
 import { useState } from "react";
 import { Link } from "react-router";
 
@@ -20,7 +21,7 @@ export default function SignInForm() {
           Back to dashboard
         </Link>
       </div>
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
+      <MotionFadeIn direction="left" duration={0.4} className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 text-title-sm font-semibold text-gray-800 sm:text-title-md dark:text-white/90">
@@ -134,7 +135,7 @@ export default function SignInForm() {
             </div>
           </div>
         </div>
-      </div>
+      </MotionFadeIn>
     </div>
   );
 }

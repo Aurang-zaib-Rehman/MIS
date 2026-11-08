@@ -19,6 +19,9 @@ export default function AuthLayout({
             <img
               src={image}
               alt="Madrasa Portal"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               className="size-full object-cover object-center"
             />
           ) : (
