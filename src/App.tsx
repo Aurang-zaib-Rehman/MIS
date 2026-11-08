@@ -2,6 +2,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import AppLayout from "./layout/AppLayout";
 import PublicLayout from "./layout/public/PublicLayout";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 // Public Pages
 import PublicHome from "./pages/Public/Home";
@@ -15,6 +16,7 @@ import Contact from "./pages/Public/Contact";
 // Auth Pages
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
+import Unauthorized from "./pages/OtherPage/Unauthorized";
 
 // Dashboard & Internal Pages
 import DashboardHome from "./pages/Dashboard/Ecommerce";
@@ -55,8 +57,14 @@ export default function App() {
             <Route path="/contact" element={<Contact />} />
           </Route>
 
-          {/* Authenticated Dashboard Layout (Preserving all existing dashboard pages) */}
-          <Route element={<AppLayout />}>
+          {/* Authenticated Dashboard Layout (Protected by RBAC Route Guard) */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route path="/dashboard" element={<DashboardHome />} />
 
             {/* Other Pages */}
@@ -86,6 +94,9 @@ export default function App() {
           {/* Auth Layout Pages */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+
+          {/* Access Control Forbidden Page */}
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* Fallback Route */}
           <Route path="*" element={<NotFound />} />
