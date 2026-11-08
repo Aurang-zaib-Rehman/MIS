@@ -13,6 +13,8 @@ const PUBLIC_PRELOAD_ASSETS = [
   "/images/donation_banner.jpeg",
   "/images/contact_banner.jpeg",
   "/images/footer-mosque.jpg",
+  "/images/login.jfif",
+  "/images/signup.jpeg",
   "/images/user/muhtamim.jpeg",
   "/images/user/staff.jpeg",
 ];

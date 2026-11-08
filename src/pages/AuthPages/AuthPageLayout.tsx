@@ -21,7 +21,7 @@ export default function AuthLayout({
               alt="Madrasa Portal"
               loading="eager"
               fetchPriority="high"
-              decoding="async"
+              decoding="sync"
               className="size-full object-cover object-center"
             />
           ) : (
