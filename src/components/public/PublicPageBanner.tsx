@@ -32,7 +32,7 @@ export const PublicPageBanner: React.FC<PublicPageBannerProps> = ({
           alt=""
           loading="eager"
           fetchPriority="high"
-          decoding="async"
+          decoding="sync"
           className={`h-full w-full object-cover ${imagePosition}`}
         />
         {/* Soft atmospheric gradient: deep navy/dark on text side (start), fading to transparent on child side (end) */}

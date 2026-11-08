@@ -16,7 +16,7 @@ export const HeroSection: React.FC = () => {
           alt="Madrasa Uloom-e-Islamia Campus"
           loading="eager"
           fetchPriority="high"
-          decoding="async"
+          decoding="sync"
           className="size-full object-cover object-center"
         />
         {/* Balanced gradient: darker on left for text legibility, transparent on right so mosque shines through */}

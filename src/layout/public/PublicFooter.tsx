@@ -11,7 +11,7 @@ export const PublicFooter: React.FC = () => {
           src="/images/footer-mosque.jpg"
           alt="Islamic Mosque Silhouette"
           loading="eager"
-          decoding="async"
+          decoding="sync"
           className="size-full object-cover object-[center_30%]"
         />
         {/* Harmonious midnight-blue gradient overlay: ensures high text readability while keeping the glowing blue mosque and minarets vibrant and eye-catching */}

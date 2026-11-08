@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Preload critical hero and banner assets for instant rendering -->
+    <link rel="preload" as="image" href="/images/hero-mosque.jpg" fetchpriority="high" />
+    <link rel="prefetch" as="image" href="/images/courses-banner.jpg" />
+    <link rel="prefetch" as="image" href="/images/teachers_banner.jpeg" />
+    <link rel="prefetch" as="image" href="/images/about_banner.jpeg" />
+    <link rel="prefetch" as="image" href="/images/admission_banner.jpeg" />
+    <link rel="prefetch" as="image" href="/images/donation_banner.jpeg" />
+    <link rel="prefetch" as="image" href="/images/contact_banner.jpeg" />
   </head>
   <body class="dark:bg-gray-900">
     <div id="root"></div>
