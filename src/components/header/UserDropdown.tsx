@@ -4,9 +4,11 @@ import { getLanguage, languages, type Locale } from "@/i18n/languages";
 import { cn } from "@/utils";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { useAuth } from "@/context/AuthContext";
+import Badge from "../ui/badge/Badge";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +18,9 @@ export default function UserDropdown() {
   const { language: locale, setLanguage } = useLanguage();
   const currentLang = getLanguage(locale as Locale);
   const CurrentFlagIcon = currentLang.FlagIcon;
+
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
 
   useClickOutside(subDropdownRef, () => {
     setIsSubDropdownOpen(false);
@@ -36,6 +41,12 @@ export default function UserDropdown() {
     setIsSubDropdownOpen(false);
   };
 
+  const handleSignOut = () => {
+    closeDropdown();
+    logout();
+    navigate("/signin", { replace: true });
+  };
+
   useEffect(() => {
     return () => {
       setIsOpen(false);
@@ -49,11 +60,16 @@ export default function UserDropdown() {
         onClick={toggleDropdown}
         className="dropdown-toggle flex items-center text-gray-700 dark:text-gray-400"
       >
-        <span className="me-3 h-11 w-11 overflow-hidden rounded-full">
-          <img src="/images/user/owner.png" alt="User" />
+        <span className="me-3 h-11 w-11 overflow-hidden rounded-full ring-2 ring-brand-500/20">
+          <img
+            src={currentUser?.avatar || "/images/user/owner.png"}
+            alt={currentUser?.name || "User Avatar"}
+          />
         </span>
 
-        <span className="me-1 block text-theme-sm font-medium">Musharof</span>
+        <span className="me-1 block text-theme-sm font-medium">
+          {currentUser ? currentUser.name.split(" ")[0] : "Account"}
+        </span>
         <svg
           className={`stroke-gray-500 transition-transform duration-200 dark:stroke-gray-400 ${
             isOpen ? "rotate-180" : ""
@@ -77,18 +93,61 @@ export default function UserDropdown() {
       <Dropdown
         isOpen={isOpen}
         onClose={closeDropdown}
-        className="absolute inset-e-0 mt-4.25 flex w-65 flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
+        className="absolute inset-e-0 mt-4.25 flex w-72 flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
       >
-        <div>
-          <span className="block text-theme-sm font-medium text-gray-700 no-underline dark:text-gray-400">
-            Musharof Chowdhury
+        <div className="border-b border-gray-100 pb-3 dark:border-gray-800">
+          <div className="flex items-center justify-between gap-2">
+            <span className="block truncate text-theme-sm font-semibold text-gray-800 no-underline dark:text-white/90">
+              {currentUser?.name || "Guest User"}
+            </span>
+            {currentUser?.role === "ADMIN" && (
+              <Badge color="primary" size="sm">
+                ADMIN
+              </Badge>
+            )}
+            {currentUser?.role === "TEACHER" && (
+              <Badge color="info" size="sm">
+                TEACHER
+              </Badge>
+            )}
+            {currentUser?.role === "STUDENT" && (
+              <Badge color="success" size="sm">
+                STUDENT
+              </Badge>
+            )}
+          </div>
+          <span className="mt-0.5 block truncate text-theme-xs text-gray-500 no-underline dark:text-gray-400">
+            {currentUser?.email || "Not signed in"}
           </span>
-          <span className="mt-0.5 block text-theme-xs text-gray-500 no-underline dark:text-gray-400">
-            randomuser@pimjo.com
-          </span>
+
+          {currentUser?.studentProfile && (
+            <div className="mt-2 rounded-lg bg-gray-50 p-1.5 text-[11px] text-gray-600 dark:bg-white/5 dark:text-gray-400">
+              <span className="font-medium text-gray-800 dark:text-gray-200">
+                Roll No:
+              </span>{" "}
+              {currentUser.studentProfile.rollNo} |{" "}
+              <span className="font-medium text-gray-800 dark:text-gray-200">
+                Darja:
+              </span>{" "}
+              {currentUser.studentProfile.darja}
+            </div>
+          )}
+
+          {currentUser?.teacherProfile && (
+            <div className="mt-2 rounded-lg bg-gray-50 p-1.5 text-[11px] text-gray-600 dark:bg-white/5 dark:text-gray-400">
+              <span className="font-medium text-gray-800 dark:text-gray-200">
+                Staff ID:
+              </span>{" "}
+              {currentUser.teacherProfile.teacherId} |{" "}
+              <span className="font-medium text-gray-800 dark:text-gray-200">
+                Dept:
+              </span>{" "}
+              {currentUser.teacherProfile.department}
+            </div>
+          )}
         </div>
 
-        <ul className="flex flex-col gap-1 border-b border-gray-200 pt-4 pb-3 dark:border-gray-800">
+        <ul className="flex flex-col gap-1 border-b border-gray-200 pt-3 pb-3 dark:border-gray-800">
           <li>
             <DropdownItem
               onItemClick={closeDropdown}
@@ -137,31 +196,6 @@ export default function UserDropdown() {
                 />
               </svg>
               {t("userDropdown.accountSettings")}
-            </DropdownItem>
-          </li>
-          <li>
-            <DropdownItem
-              onItemClick={closeDropdown}
-              tag="a"
-              to="/profile"
-              className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              <svg
-                className="fill-gray-500 group-hover:fill-gray-700 dark:fill-gray-400 dark:group-hover:fill-gray-300"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M3.5 12C3.5 7.30558 7.30558 3.5 12 3.5C16.6944 3.5 20.5 7.30558 20.5 12C20.5 16.6944 16.6944 20.5 12 20.5C7.30558 20.5 3.5 16.6944 3.5 12ZM12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM11.0991 7.52507C11.0991 8.02213 11.5021 8.42507 11.9991 8.42507H12.0001C12.4972 8.42507 12.9001 8.02213 12.9001 7.52507C12.9001 7.02802 12.4972 6.62507 12.0001 6.62507H11.9991C11.5021 6.62507 11.0991 7.02802 11.0991 7.52507ZM12.0001 17.3714C11.5859 17.3714 11.2501 17.0356 11.2501 16.6214V10.9449C11.2501 10.5307 11.5859 10.1949 12.0001 10.1949C12.4143 10.1949 12.7501 10.5307 12.7501 10.9449V16.6214C12.7501 17.0356 12.4143 17.3714 12.0001 17.3714Z"
-                  fill=""
-                />
-              </svg>
-              {t("userDropdown.support")}
             </DropdownItem>
           </li>
           <li className="relative" ref={subDropdownRef}>
@@ -251,9 +285,11 @@ export default function UserDropdown() {
             )}
           </li>
         </ul>
-        <Link
-          to="/signin"
-          className="group mt-3 flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+
+        <button
+          type="button"
+          onClick={handleSignOut}
+          className="group mt-3 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-start text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
           <svg
             className="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
@@ -271,7 +307,7 @@ export default function UserDropdown() {
             />
           </svg>
           {t("userDropdown.signOut")}
-        </Link>
+        </button>
       </Dropdown>
     </div>
   );

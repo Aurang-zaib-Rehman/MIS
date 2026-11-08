@@ -2,14 +2,83 @@ import Label from "@/components/form/Label";
 import Checkbox from "@/components/form/input/Checkbox";
 import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
+import Alert from "@/components/ui/alert/Alert";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import { MotionFadeIn } from "@/components/public/Motion";
-import { useState } from "react";
-import { Link } from "react-router";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useAuth } from "@/context/AuthContext";
+import { DEMO_ACCOUNTS } from "@/services/mockAuthData";
 
 export default function SignInForm() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { currentUser, isAuthenticated, login, getRoleDefaultPath } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // If already authenticated, redirect to authorized landing
+  useEffect(() => {
+    if (isAuthenticated && currentUser) {
+      const destination =
+        (location.state as { from?: { pathname?: string } })?.from?.pathname ||
+        getRoleDefaultPath(currentUser.role);
+      navigate(destination, { replace: true });
+    }
+  }, [isAuthenticated, currentUser, navigate, location.state, getRoleDefaultPath]);
+
+  // Quick fill helper for Phase 3 testing
+  const handleQuickFill = (demoEmail: string, demoPass: string) => {
+    setEmail(demoEmail);
+    setPassword(demoPass);
+    setErrorMessage(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setErrorMessage("Please enter your registered email address.");
+      return;
+    }
+    if (!password) {
+      setErrorMessage("Please enter your password.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await login({ email: trimmedEmail, password });
+      if (response.success && response.session) {
+        setSuccessMessage(`Welcome back, ${response.session.name}! Redirecting...`);
+        
+        // Prioritize requested URL from state, otherwise use role default landing
+        const destination =
+          (location.state as { from?: { pathname?: string } })?.from?.pathname ||
+          getRoleDefaultPath(response.session.role);
+
+        setTimeout(() => {
+          navigate(destination, { replace: true });
+        }, 350);
+      } else {
+        setErrorMessage(response.error || "Authentication failed. Please verify your credentials.");
+      }
+    } catch {
+      setErrorMessage("An unexpected error occurred during sign in. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="mx-auto w-full max-w-md pt-10">
@@ -18,67 +87,115 @@ export default function SignInForm() {
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
         >
           <ChevronLeftIcon className="size-5 rtl:rotate-180" />
-          Back to dashboard
+          Back to website
         </Link>
       </div>
-      <MotionFadeIn direction="left" duration={0.4} className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
+
+      <MotionFadeIn
+        direction="left"
+        duration={0.4}
+        className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center"
+      >
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 text-title-sm font-semibold text-gray-800 sm:text-title-md dark:text-white/90">
-              Sign In
+              Sign In to Madrassa MIS
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your email and password to sign in!
+              Enter your credentials to access your academic dashboard.
             </p>
           </div>
-          <div>
-            <div className="flex justify-center">
-              <button className="inline-flex w-full items-center justify-center gap-3 rounded-lg bg-gray-100 px-7 py-3 text-sm font-normal text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M18.7511 10.1944C18.7511 9.47495 18.6915 8.94995 18.5626 8.40552H10.1797V11.6527H15.1003C15.0011 12.4597 14.4654 13.675 13.2749 14.4916L13.2582 14.6003L15.9087 16.6126L16.0924 16.6305C17.7788 15.1041 18.7511 12.8583 18.7511 10.1944Z"
-                    fill="#4285F4"
-                  />
-                  <path
-                    d="M10.1788 18.75C12.5895 18.75 14.6133 17.9722 16.0915 16.6305L13.274 14.4916C12.5201 15.0068 11.5081 15.3666 10.1788 15.3666C7.81773 15.3666 5.81379 13.8402 5.09944 11.7305L4.99473 11.7392L2.23868 13.8295L2.20264 13.9277C3.67087 16.786 6.68674 18.75 10.1788 18.75Z"
-                    fill="#34A853"
-                  />
-                  <path
-                    d="M5.10014 11.7305C4.91165 11.186 4.80257 10.6027 4.80257 9.99992C4.80257 9.3971 4.91165 8.81379 5.09022 8.26935L5.08523 8.1534L2.29464 6.02954L2.20333 6.0721C1.5982 7.25823 1.25098 8.5902 1.25098 9.99992C1.25098 11.4096 1.5982 12.7415 2.20333 13.9277L5.10014 11.7305Z"
-                    fill="#FBBC05"
-                  />
-                  <path
-                    d="M10.1789 4.63331C11.8554 4.63331 12.9864 5.34303 13.6312 5.93612L16.1511 3.525C14.6035 2.11528 12.5895 1.25 10.1789 1.25C6.68676 1.25 3.67088 3.21387 2.20264 6.07218L5.08953 8.26943C5.81381 6.15972 7.81776 4.63331 10.1789 4.63331Z"
-                    fill="#EB4335"
-                  />
-                </svg>
-                Sign in with Google
+
+          {/* Demo Account Selector Pills (Phase 3 Testing) */}
+          <div className="mb-6 rounded-xl border border-dashed border-brand-300 bg-brand-50/50 p-3.5 dark:border-brand-500/30 dark:bg-brand-500/10">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-theme-xs font-semibold uppercase tracking-wider text-brand-700 dark:text-brand-300">
+                Phase 3 Demo Accounts
+              </span>
+              <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                Click to Auto-Fill
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  handleQuickFill(DEMO_ACCOUNTS.ADMIN.email, DEMO_ACCOUNTS.ADMIN.password)
+                }
+                className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white py-1.5 px-2 text-center transition-all hover:border-brand-500 hover:bg-brand-50 hover:shadow-xs active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-brand-500/20"
+              >
+                <span className="text-theme-xs font-bold text-gray-800 dark:text-gray-200">
+                  Admin
+                </span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-400">
+                  Full Control
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  handleQuickFill(DEMO_ACCOUNTS.TEACHER.email, DEMO_ACCOUNTS.TEACHER.password)
+                }
+                className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white py-1.5 px-2 text-center transition-all hover:border-brand-500 hover:bg-brand-50 hover:shadow-xs active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-brand-500/20"
+              >
+                <span className="text-theme-xs font-bold text-gray-800 dark:text-gray-200">
+                  Teacher
+                </span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-400">
+                  Academic
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  handleQuickFill(DEMO_ACCOUNTS.STUDENT.email, DEMO_ACCOUNTS.STUDENT.password)
+                }
+                className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white py-1.5 px-2 text-center transition-all hover:border-brand-500 hover:bg-brand-50 hover:shadow-xs active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-brand-500/20"
+              >
+                <span className="text-theme-xs font-bold text-gray-800 dark:text-gray-200">
+                  Student
+                </span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-400">
+                  Portal
+                </span>
               </button>
             </div>
-            <div className="relative py-3 sm:py-5">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="bg-white p-2 text-gray-400 sm:px-5 sm:py-2 dark:bg-gray-900">
-                  Or
-                </span>
-              </div>
+          </div>
+
+          {/* Feedback Alerts */}
+          {errorMessage && (
+            <div className="mb-4">
+              <Alert variant="error" title="Sign In Error" message={errorMessage} />
             </div>
-            <form>
-              <div className="space-y-6">
+          )}
+
+          {successMessage && (
+            <div className="mb-4">
+              <Alert variant="success" title="Authenticated" message={successMessage} />
+            </div>
+          )}
+
+          <div>
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-5">
                 <div>
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input placeholder="info@gmail.com" />
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (errorMessage) setErrorMessage(null);
+                    }}
+                    placeholder="e.g. admin@madrassa.com"
+                    autoComplete="email"
+                  />
                 </div>
+
                 <div>
                   <Label>
                     Password <span className="text-error-500">*</span>{" "}
@@ -86,11 +203,19 @@ export default function SignInForm() {
                   <div className="relative">
                     <Input
                       type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        if (errorMessage) setErrorMessage(null);
+                      }}
                       placeholder="Enter your password"
+                      autoComplete="current-password"
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-e-4 top-1/2 z-30 -translate-y-1/2 cursor-pointer"
+                      role="button"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? (
                         <EyeIcon className="size-5 fill-gray-500 dark:fill-gray-400" />
@@ -100,6 +225,7 @@ export default function SignInForm() {
                     </span>
                   </div>
                 </div>
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Checkbox checked={isChecked} onChange={setIsChecked} />
@@ -114,9 +240,14 @@ export default function SignInForm() {
                     Forgot password?
                   </Link>
                 </div>
+
                 <div>
-                  <Button className="w-full" size="sm">
-                    Sign in
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Authenticating..." : "Sign in"}
                   </Button>
                 </div>
               </div>
