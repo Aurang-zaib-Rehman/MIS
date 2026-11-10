@@ -1,70 +1,57 @@
 /**
- * Mock Authentication Data & Test Accounts
+ * Role Profiles & Mock Identities
  * Phase 3 — Madrassa Management Information System (MIS)
  *
- * IMPORTANT NOTE / SECURITY WARNING:
- * This file contains development-only demo accounts and mock identities.
- * These credentials and records are stored in frontend code solely for temporary
- * development, UI prototyping, and testing prior to backend/database implementation.
- * In production, authentication and authorization MUST be validated by a secure backend server.
+ * Provides defined role identities for the 3 system roles:
+ * - ADMIN
+ * - TEACHER
+ * - STUDENT
+ *
+ * No passwords or credential databases are stored here.
+ * Real backend authentication & database authorization will be connected in a future phase.
  */
 
-import type { AuthSession, Role, StudentProfileData, TeacherProfileData } from "@/types/auth";
+import type { AuthSession, Role } from "@/types/auth";
 
-export interface MockUserAccount {
-  id: string;
-  name: string;
-  email: string;
-  passwordHash: string; // Plaintext for frontend mock comparison only
-  role: Role;
-  avatar: string;
-  teacherProfile?: TeacherProfileData;
-  studentProfile?: StudentProfileData;
-}
+export const DEMO_ROLES: Role[] = ["ADMIN", "TEACHER", "STUDENT"];
 
-/**
- * Predefined Development Demo Accounts for Testing
- */
 export const DEMO_ACCOUNTS = {
   ADMIN: {
     email: "admin@madrassa.com",
-    password: "Admin@123",
     role: "ADMIN" as const,
   },
   TEACHER: {
     email: "teacher@madrassa.com",
-    password: "Teacher@123",
     role: "TEACHER" as const,
   },
   STUDENT: {
     email: "student@madrassa.com",
-    password: "Student@123",
     role: "STUDENT" as const,
   },
 } as const;
 
 /**
- * Three Predefined Development Demo Accounts
+ * Role Session Profiles for 1-Click Role Access
  */
-export const MOCK_USERS: MockUserAccount[] = [
+export const ROLE_PROFILES: Record<Role, AuthSession> = {
   // 1. ADMIN SUPERUSER
-  {
-    id: "usr_admin_001",
+  ADMIN: {
+    userId: "usr_admin_001",
     name: "Hazrat Maulana Mufti Mian Saeed Akbar",
     email: "admin@madrassa.com",
-    passwordHash: "Admin@123",
     role: "ADMIN",
     avatar: "/images/user/muhtamim.jpeg",
+    loginTimestamp: Date.now(),
   },
 
-  // 2. TEACHER
-  {
-    id: "usr_teacher_001",
+  // 2. TEACHER / FACULTY
+  TEACHER: {
+    userId: "usr_teacher_001",
     name: "Maulana Aurang Zaib Rehman",
     email: "teacher@madrassa.com",
-    passwordHash: "Teacher@123",
     role: "TEACHER",
     avatar: "/images/user/staff.jpeg",
+    loginTimestamp: Date.now(),
     teacherProfile: {
       teacherId: "TCH-004",
       designation: "Senior Instructor of Arabic Grammar",
@@ -75,13 +62,13 @@ export const MOCK_USERS: MockUserAccount[] = [
   },
 
   // 3. STUDENT
-  {
-    id: "usr_student_001",
+  STUDENT: {
+    userId: "usr_student_001",
     name: "Muhammad Abdullah Khan",
     email: "student@madrassa.com",
-    passwordHash: "Student@123",
     role: "STUDENT",
     avatar: "/images/user/owner.png",
+    loginTimestamp: Date.now(),
     studentProfile: {
       studentId: "STD-1447-042",
       rollNo: "24-DS-042",
@@ -91,7 +78,18 @@ export const MOCK_USERS: MockUserAccount[] = [
       admissionYear: 2024,
     },
   },
-];
+};
+
+/**
+ * Returns a cloned session object for the given role
+ */
+export function getRoleSession(role: Role): AuthSession {
+  const profile = ROLE_PROFILES[role] || ROLE_PROFILES.ADMIN;
+  return {
+    ...profile,
+    loginTimestamp: Date.now(),
+  };
+}
 
 /**
  * Mock Data Records for Testing Role & Data Isolation
@@ -160,20 +158,3 @@ export const MOCK_CLASS_ATTENDANCE: MockClassAttendanceRecord[] = [
     totalCount: 24,
   },
 ];
-
-/**
- * Creates an AuthSession object from a MockUserAccount
- * (Excludes passwordHash)
- */
-export function createSessionFromAccount(account: MockUserAccount): AuthSession {
-  return {
-    userId: account.id,
-    name: account.name,
-    email: account.email,
-    role: account.role,
-    avatar: account.avatar,
-    loginTimestamp: Date.now(),
-    teacherProfile: account.teacherProfile,
-    studentProfile: account.studentProfile,
-  };
-}

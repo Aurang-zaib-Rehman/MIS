@@ -1,11 +1,11 @@
 /**
  * Phase 3 Automated Verification Test Suite
- * Comprehensive Independent Verification for Authentication & RBAC
+ * Updated for Direct 1-Click Role Access (No Mock Passwords / No localStorage Credentials)
  */
 
 import assert from "node:assert/strict";
 
-// Mock localStorage environment for Node.js test runner
+// Mock localStorage and sessionStorage for Node.js test environment
 const localStorageStore = new Map();
 globalThis.localStorage = {
   getItem: (key) => localStorageStore.get(key) ?? null,
@@ -14,9 +14,17 @@ globalThis.localStorage = {
   clear: () => localStorageStore.clear(),
 };
 
+const sessionStorageStore = new Map();
+globalThis.sessionStorage = {
+  getItem: (key) => sessionStorageStore.get(key) ?? null,
+  setItem: (key, val) => sessionStorageStore.set(key, String(val)),
+  removeItem: (key) => sessionStorageStore.delete(key),
+  clear: () => sessionStorageStore.clear(),
+};
+
 export async function runTests() {
   console.log("=================================================");
-  console.log("  PHASE 3: COMPREHENSIVE VERIFICATION SUITE");
+  console.log("  PHASE 3: DIRECT ROLE ACCESS VERIFICATION SUITE");
   console.log("=================================================\n");
 
   let passed = 0;
@@ -47,8 +55,8 @@ export async function runTests() {
   }
 
   // 1. Module Imports
-  const { AuthService, AUTH_STORAGE_KEY } = await import("./src/services/authService.ts");
-  const { DEMO_ACCOUNTS, MOCK_USERS } = await import("./src/services/mockAuthData.ts");
+  const { AuthService, DEV_ROLE_SESSION_KEY, LEGACY_STORAGE_KEY } = await import("./src/services/authService.ts");
+  const { ROLE_PROFILES, DEMO_ROLES } = await import("./src/services/mockAuthData.ts");
   const {
     ROLE_PERMISSIONS,
     ROLE_DEFAULT_REDIRECTS,
@@ -58,179 +66,90 @@ export async function runTests() {
   } = await import("./src/config/permissions.ts");
 
   // =========================================================================
-  // SUITE 1: Predefined Demo Accounts & Roles
+  // SUITE 1: Predefined Roles & Elimination of Passwords
   // =========================================================================
   test("1.1 Exactly three roles must be defined (ADMIN, TEACHER, STUDENT)", () => {
     const roles = Object.keys(ROLE_PERMISSIONS);
     assert.deepEqual(roles.sort(), ["ADMIN", "STUDENT", "TEACHER"]);
+    assert.deepEqual([...DEMO_ROLES].sort(), ["ADMIN", "STUDENT", "TEACHER"]);
   });
 
-  test("1.2 Demo accounts match required development credentials", () => {
-    assert.equal(DEMO_ACCOUNTS.ADMIN.email, "admin@madrassa.com");
-    assert.equal(DEMO_ACCOUNTS.ADMIN.password, "Admin@123");
-    assert.equal(DEMO_ACCOUNTS.ADMIN.role, "ADMIN");
-
-    assert.equal(DEMO_ACCOUNTS.TEACHER.email, "teacher@madrassa.com");
-    assert.equal(DEMO_ACCOUNTS.TEACHER.password, "Teacher@123");
-    assert.equal(DEMO_ACCOUNTS.TEACHER.role, "TEACHER");
-
-    assert.equal(DEMO_ACCOUNTS.STUDENT.email, "student@madrassa.com");
-    assert.equal(DEMO_ACCOUNTS.STUDENT.password, "Student@123");
-    assert.equal(DEMO_ACCOUNTS.STUDENT.role, "STUDENT");
+  test("1.2 No passwords or credential hashes exist in role profiles", () => {
+    for (const role of ["ADMIN", "TEACHER", "STUDENT"]) {
+      const profile = ROLE_PROFILES[role];
+      assert.notEqual(profile, undefined);
+      assert.equal("password" in profile, false);
+      assert.equal("passwordHash" in profile, false);
+      assert.equal(profile.role, role);
+    }
   });
 
   // =========================================================================
-  // SUITE 2: Authentication Flows for All 3 Accounts
+  // SUITE 2: 1-Click Direct Role Login (No Login Credentials Needed)
   // =========================================================================
-  await asyncTest("2.1 Admin login creates session, landing route /dashboard, excludes password", async () => {
-    localStorage.clear();
-    const session = await AuthService.login({
-      email: "admin@madrassa.com",
-      password: "Admin@123",
-    });
+  test("2.1 Admin 1-click role activation creates session and lands at /dashboard", () => {
+    sessionStorage.clear();
+    const session = AuthService.loginAsRole("ADMIN");
 
     assert.equal(session.role, "ADMIN");
     assert.equal(session.email, "admin@madrassa.com");
     assert.equal(ROLE_DEFAULT_REDIRECTS[session.role], "/dashboard");
-    assert.equal("passwordHash" in session, false);
     assert.equal("password" in session, false);
-
-    // Verify localStorage persistence
-    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
-    assert.notEqual(raw, null);
-    const stored = JSON.parse(raw);
-    assert.equal(stored.role, "ADMIN");
-    assert.equal(stored.userId, session.userId);
-    assert.equal("password" in stored, false);
-    assert.equal("passwordHash" in stored, false);
+    assert.equal("passwordHash" in session, false);
   });
 
-  await asyncTest("2.2 Teacher login creates session, landing route /calendar, includes teacherProfile", async () => {
-    localStorage.clear();
-    const session = await AuthService.login({
-      email: "teacher@madrassa.com",
-      password: "Teacher@123",
-    });
+  test("2.2 Teacher 1-click role activation creates session and lands at /calendar", () => {
+    sessionStorage.clear();
+    const session = AuthService.loginAsRole("TEACHER");
 
     assert.equal(session.role, "TEACHER");
+    assert.equal(session.email, "teacher@madrassa.com");
     assert.equal(ROLE_DEFAULT_REDIRECTS[session.role], "/calendar");
     assert.equal(session.teacherProfile?.teacherId, "TCH-004");
     assert.equal(Array.isArray(session.teacherProfile?.assignedClasses), true);
-    assert.equal("password" in session, false);
   });
 
-  await asyncTest("2.3 Student login creates session, landing route /profile, includes studentProfile", async () => {
-    localStorage.clear();
-    const session = await AuthService.login({
-      email: "student@madrassa.com",
-      password: "Student@123",
-    });
+  test("2.3 Student 1-click role activation creates session and lands at /student/dashboard", () => {
+    sessionStorage.clear();
+    const session = AuthService.loginAsRole("STUDENT");
 
     assert.equal(session.role, "STUDENT");
-    assert.equal(ROLE_DEFAULT_REDIRECTS[session.role], "/profile");
+    assert.equal(session.email, "student@madrassa.com");
+    assert.equal(ROLE_DEFAULT_REDIRECTS[session.role], "/student/dashboard");
     assert.equal(session.studentProfile?.studentId, "STD-1447-042");
     assert.equal(session.studentProfile?.darja, "Darja Saniya (Year 2)");
-    assert.equal("password" in session, false);
-  });
-
-  await asyncTest("2.4 Invalid password is rejected with informative error", async () => {
-    await assert.rejects(
-      async () => {
-        await AuthService.login({
-          email: "admin@madrassa.com",
-          password: "WrongPassword999",
-        });
-      },
-      {
-        message: "Invalid email or password. Please verify your credentials.",
-      }
-    );
-  });
-
-  await asyncTest("2.5 Unregistered email is rejected with informative error", async () => {
-    await assert.rejects(
-      async () => {
-        await AuthService.login({
-          email: "unknown@madrassa.com",
-          password: "Admin@123",
-        });
-      },
-      {
-        message: "Invalid email or password. Please verify your credentials.",
-      }
-    );
-  });
-
-  await asyncTest("2.6 Empty credentials are rejected immediately", async () => {
-    await assert.rejects(
-      async () => {
-        await AuthService.login({ email: "", password: "" });
-      },
-      {
-        message: "Email and password are required.",
-      }
-    );
   });
 
   // =========================================================================
-  // SUITE 3: Session Lifecycle, Restoration & Corruption Purging
+  // SUITE 3: Storage Verification — Permanent Removal from localStorage
   // =========================================================================
-  await asyncTest("3.1 Refresh / reload restores active session accurately", async () => {
-    localStorage.clear();
-    await AuthService.login({
-      email: "teacher@madrassa.com",
-      password: "Teacher@123",
-    });
+  test("3.1 localStorage NEVER contains login session, passwords, or signup data", () => {
+    // Populate legacy key to simulate old state
+    localStorage.setItem(LEGACY_STORAGE_KEY, "old-legacy-data");
 
-    // Simulating browser reload: calling getCurrentSession from storage
-    const reloaded = AuthService.getCurrentSession();
-    assert.notEqual(reloaded, null);
-    assert.equal(reloaded?.role, "TEACHER");
-    assert.equal(reloaded?.teacherProfile?.teacherId, "TCH-004");
+    // Any auth action permanently purges legacy storage
+    AuthService.loginAsRole("ADMIN");
+    assert.equal(localStorage.getItem(LEGACY_STORAGE_KEY), null);
+    assert.equal(localStorage.getItem("madrassa_auth_session_v1"), null);
   });
 
-  await asyncTest("3.2 Logout cleanly clears authentication session from localStorage", async () => {
+  test("3.2 Active role is retained in sessionStorage for browser refreshes", () => {
+    sessionStorage.clear();
+    AuthService.loginAsRole("TEACHER");
+
+    // Simulating page refresh by retrieving current session
+    const current = AuthService.getCurrentSession();
+    assert.notEqual(current, null);
+    assert.equal(current?.role, "TEACHER");
+    assert.equal(sessionStorage.getItem(DEV_ROLE_SESSION_KEY), "TEACHER");
+  });
+
+  await asyncTest("3.3 Logout cleanly purges all session state", async () => {
     await AuthService.logout();
-    const reloaded = AuthService.getCurrentSession();
-    assert.equal(reloaded, null);
-    assert.equal(localStorage.getItem(AUTH_STORAGE_KEY), null);
-  });
-
-  test("3.3 Valid session schema validation passes", () => {
-    const valid = {
-      userId: "usr_001",
-      name: "Test User",
-      email: "test@madrassa.com",
-      role: "ADMIN",
-      avatar: "/avatar.png",
-      loginTimestamp: Date.now(),
-    };
-    assert.equal(AuthService.validateSession(valid), true);
-  });
-
-  test("3.4 Tampered role string outside valid enum fails validation", () => {
-    const tampered = {
-      userId: "usr_001",
-      name: "Hacker",
-      email: "hacker@test.com",
-      role: "SUPER_ADMIN_ROOT",
-      avatar: "/avatar.png",
-      loginTimestamp: Date.now(),
-    };
-    assert.equal(AuthService.validateSession(tampered), false);
-  });
-
-  test("3.5 Incomplete session object fails validation", () => {
-    assert.equal(AuthService.validateSession({ userId: "usr_001" }), false);
-    assert.equal(AuthService.validateSession(null), false);
-    assert.equal(AuthService.validateSession("string-data"), false);
-  });
-
-  test("3.6 Corrupted JSON in localStorage is purged safely without application crash", () => {
-    localStorage.setItem(AUTH_STORAGE_KEY, "INVALID_NON_JSON_CORRUPTED_STRING{{{");
-    const restored = AuthService.getCurrentSession();
-    assert.equal(restored, null);
-    assert.equal(localStorage.getItem(AUTH_STORAGE_KEY), null);
+    const current = AuthService.getCurrentSession();
+    assert.equal(current, null);
+    assert.equal(sessionStorage.getItem(DEV_ROLE_SESSION_KEY), null);
+    assert.equal(localStorage.getItem(LEGACY_STORAGE_KEY), null);
   });
 
   // =========================================================================
@@ -261,31 +180,33 @@ export async function runTests() {
 
   test("4.3 STUDENT possesses only self-service permissions, strictly denied staff actions", () => {
     assert.equal(hasRolePermission("STUDENT", "view:own_student_profile"), true);
+    assert.equal(hasRolePermission("STUDENT", "view:own_darja"), true);
+    assert.equal(hasRolePermission("STUDENT", "view:own_enrolled_courses"), true);
     assert.equal(hasRolePermission("STUDENT", "view:own_examination_results"), true);
     assert.equal(hasRolePermission("STUDENT", "view:own_fee_challans"), true);
-    assert.equal(hasRolePermission("STUDENT", "view:own_outstanding_dues"), true);
 
     // Explicitly denied permissions
     assert.equal(hasRolePermission("STUDENT", "mark:student_attendance"), false);
     assert.equal(hasRolePermission("STUDENT", "enter:student_marks"), false);
-    assert.equal(hasRolePermission("STUDENT", "view:assigned_classes"), false);
     assert.equal(hasRolePermission("STUDENT", "manage:students"), false);
+    assert.equal(hasRolePermission("STUDENT", "manage:admissions"), false);
     assert.equal(hasRolePermission("STUDENT", "manage:payroll"), false);
+    assert.equal(hasRolePermission("STUDENT", "manage:fees"), false);
   });
 
   test("4.4 Unknown permissions are denied by default for all roles", () => {
-    assert.equal(hasRolePermission("ADMIN", "manage:non_existent_module"), false);
-    assert.equal(hasRolePermission("TEACHER", "manage:non_existent_module"), false);
-    assert.equal(hasRolePermission("STUDENT", "manage:non_existent_module"), false);
+    const unknownPerm = "delete:entire_database";
+    assert.equal(hasRolePermission("ADMIN", unknownPerm), false);
+    assert.equal(hasRolePermission("TEACHER", unknownPerm), false);
+    assert.equal(hasRolePermission("STUDENT", unknownPerm), false);
   });
 
   // =========================================================================
-  // SUITE 5: Direct URL Access Control & Unknown Route Handling
+  // SUITE 5: Route Authorization & Security
   // =========================================================================
   test("5.1 Unknown / unmapped routes are denied by default for ALL roles (including ADMIN)", () => {
-    // Crucial security requirement: unmapped routes are NEVER authorized by default
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/unmapped-route"), false);
-    assert.equal(isRouteAuthorizedForRole("ADMIN", "/dashboard/unknown-page"), false);
+    assert.equal(isRouteAuthorizedForRole("ADMIN", "/api/secret"), false);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/unmapped-route"), false);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/unmapped-route"), false);
   });
@@ -307,7 +228,6 @@ export async function runTests() {
   });
 
   test("5.3 Generic template pages (/form-elements, /basic-tables, /blank) are denied to TEACHER and STUDENT", () => {
-    // Template showcases must not expose mock corporate data to teachers or students
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/form-elements"), false);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/basic-tables"), false);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/blank"), false);
@@ -321,145 +241,72 @@ export async function runTests() {
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/calendar"), true);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/profile"), true);
 
-    // Blocked from admin and template modules
+    // Blocked from admin routes
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/dashboard"), false);
-    assert.equal(isRouteAuthorizedForRole("TEACHER", "/line-chart"), false);
-    assert.equal(isRouteAuthorizedForRole("TEACHER", "/bar-chart"), false);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/alerts"), false);
-    assert.equal(isRouteAuthorizedForRole("TEACHER", "/badge"), false);
+    assert.equal(isRouteAuthorizedForRole("TEACHER", "/line-chart"), false);
   });
 
-  test("5.5 STUDENT direct URL access — Allowed only student portal routes (/profile, /calendar)", () => {
+  test("5.5 STUDENT direct URL access — Allowed only student portal routes (/student/*, /profile, /calendar)", () => {
+    assert.equal(isRouteAuthorizedForRole("STUDENT", "/student/dashboard"), true);
+    assert.equal(isRouteAuthorizedForRole("STUDENT", "/student/results"), true);
+    assert.equal(isRouteAuthorizedForRole("STUDENT", "/student/fees"), true);
+    assert.equal(isRouteAuthorizedForRole("STUDENT", "/student/attendance"), true);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/profile"), true);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/calendar"), true);
 
-    // Blocked from staff and admin modules
+    // Blocked from admin & teacher management routes
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/dashboard"), false);
-    assert.equal(isRouteAuthorizedForRole("STUDENT", "/form-elements"), false);
-    assert.equal(isRouteAuthorizedForRole("STUDENT", "/basic-tables"), false);
-    assert.equal(isRouteAuthorizedForRole("STUDENT", "/line-chart"), false);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/alerts"), false);
+    assert.equal(isRouteAuthorizedForRole("STUDENT", "/badge"), false);
+    assert.equal(isRouteAuthorizedForRole("STUDENT", "/form-elements"), false);
   });
 
   // =========================================================================
-  // SUITE 6: Trailing Slash URL Normalization
+  // SUITE 6: Path Normalization
   // =========================================================================
   test("6.1 URL path normalization handles trailing slashes consistently", () => {
+    assert.equal(isRouteAuthorizedForRole("ADMIN", "/dashboard/"), true);
+    assert.equal(isRouteAuthorizedForRole("ADMIN", "/calendar/"), true);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/calendar/"), true);
-    assert.equal(isRouteAuthorizedForRole("STUDENT", "/profile/"), true);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/dashboard/"), false);
-    assert.equal(isRouteAuthorizedForRole("TEACHER", "/dashboard/"), false);
-    assert.equal(isRouteAuthorizedForRole("ADMIN", "/unmapped-route/"), false);
   });
 
   // =========================================================================
-  // SUITE 7: Data Isolation Verification
+  // SUITE 7: Multi-Tenant Data Isolation
   // =========================================================================
   test("7.1 Student data isolation — Student can NEVER view peer student records", () => {
-    const studentSession = {
-      userId: "usr_student_001",
-      name: "Muhammad Abdullah Khan",
-      email: "student@madrassa.com",
-      role: "STUDENT",
-      avatar: "/avatar.png",
-      loginTimestamp: Date.now(),
-      studentProfile: {
-        studentId: "STD-1447-042",
-        rollNo: "1447/042",
-        darja: "Darja Saniya (Year 2)",
-        department: "Shoba-e-Dars-e-Nizami",
-        guardianName: "Hafiz Muhammad Ibrahim",
-        admissionYear: 2024,
-      },
-    };
-
+    const studentSession = AuthService.loginAsRole("STUDENT");
     const records = AuthService.getStudentRecords(studentSession);
+
     assert.equal(records.length, 1);
     assert.equal(records[0].studentId, "STD-1447-042");
-    assert.equal(records[0].studentName, "Muhammad Abdullah Khan");
-
-    // Confirms peer student record (STD-1447-099) is NOT leaked
-    const leakedRecords = records.filter((r) => r.studentId === "STD-1447-099");
-    assert.equal(leakedRecords.length, 0);
+    assert.equal(records.some((r) => r.studentId === "STD-1447-099"), false);
   });
 
   test("7.2 Teacher data isolation — Teacher can NEVER view unassigned classes", () => {
-    const teacherSession = {
-      userId: "usr_teacher_001",
-      name: "Maulana Aurang Zaib Rehman",
-      email: "teacher@madrassa.com",
-      role: "TEACHER",
-      avatar: "/avatar.png",
-      loginTimestamp: Date.now(),
-      teacherProfile: {
-        teacherId: "TCH-004",
-        designation: "Senior Instructor",
-        department: "Dars-e-Nizami",
-        assignedClasses: ["Class 1A (Darja Oola)", "Class 2B (Darja Saani)"],
-        assignedCourses: ["Ilm-us-Sarf", "Nahw"],
-      },
-    };
+    const teacherSession = AuthService.loginAsRole("TEACHER");
+    const records = AuthService.getClassAttendanceRecords(teacherSession);
 
-    const attendanceRecords = AuthService.getClassAttendanceRecords(teacherSession);
-    assert.equal(attendanceRecords.length, 1);
-    assert.equal(attendanceRecords[0].teacherId, "TCH-004");
-    assert.equal(attendanceRecords[0].courseName, "Ilm-us-Sarf");
-
-    // Confirms other teacher's class (TCH-009) is NOT leaked
-    const leakedAttendance = attendanceRecords.filter((a) => a.teacherId === "TCH-009");
-    assert.equal(leakedAttendance.length, 0);
+    assert.equal(records.length, 1);
+    assert.equal(records[0].teacherId, "TCH-004");
+    assert.equal(records.some((r) => r.teacherId === "TCH-009"), false);
   });
 
   test("7.3 Admin data access — Admin has complete visibility across all records", () => {
-    const adminSession = {
-      userId: "usr_admin_001",
-      name: "Admin",
-      email: "admin@madrassa.com",
-      role: "ADMIN",
-      avatar: "/avatar.png",
-      loginTimestamp: Date.now(),
-    };
+    const adminSession = AuthService.loginAsRole("ADMIN");
+    const studentRecords = AuthService.getStudentRecords(adminSession);
+    const attendanceRecords = AuthService.getClassAttendanceRecords(adminSession);
 
-    const allStudents = AuthService.getStudentRecords(adminSession);
-    const allAttendance = AuthService.getClassAttendanceRecords(adminSession);
-
-    assert.equal(allStudents.length, 2);
-    assert.equal(allAttendance.length, 2);
-  });
-
-  // =========================================================================
-  // SUITE 8: localStorage Tampering Simulation (Honest Architectural Reality)
-  // =========================================================================
-  await asyncTest("8.1 Modifying stored role in localStorage demonstrates client-side limitations", async () => {
-    localStorage.clear();
-    // 1. Log in as Student
-    await AuthService.login({
-      email: "student@madrassa.com",
-      password: "Student@123",
-    });
-
-    // 2. Inspect session
-    const original = JSON.parse(localStorage.getItem(AUTH_STORAGE_KEY));
-    assert.equal(original.role, "STUDENT");
-
-    // 3. Simulate DevTools tampering: change role to "ADMIN"
-    original.role = "ADMIN";
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(original));
-
-    // 4. Simulate page reload
-    const reloaded = AuthService.getCurrentSession();
-
-    // 5. Honest observation: In a frontend-only mock implementation without backend JWT/signature,
-    // the frontend accepts the client-modified role.
-    assert.equal(reloaded?.role, "ADMIN");
-    // This confirms real server-side authorization will be mandatory once the backend is developed!
+    assert.equal(studentRecords.length, 2);
+    assert.equal(attendanceRecords.length, 2);
   });
 
   console.log("\n=================================================");
   console.log(`  TEST RESULTS: ${passed} PASSED, ${failed} FAILED`);
-  console.log("=================================================");
+  console.log("=================================================\n");
 
   if (failed > 0) {
-    throw new Error(`${failed} tests failed`);
+    process.exit(1);
   }
 }

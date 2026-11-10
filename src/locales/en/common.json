@@ -21,6 +21,13 @@
     },
     "items": {
       "dashboard": "Dashboard",
+      "studentDashboard": "Dashboard",
+      "studentResults": "Result",
+      "studentFees": "Fees",
+      "studentAttendance": "Attendance",
+      "studentProfile": "Profile",
+      "teacherCalendar": "Schedule & Timetable",
+      "teacherProfile": "Profile",
       "ecommerceHome": "Ecommerce",
       "analytics": "Analytics",
       "marketing": "Marketing",

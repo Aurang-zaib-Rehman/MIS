@@ -86,7 +86,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
 export const ROLE_DEFAULT_REDIRECTS: Record<Role, string> = {
   ADMIN: "/dashboard",
   TEACHER: "/calendar",
-  STUDENT: "/profile",
+  STUDENT: "/student/dashboard",
 };
 
 /**
@@ -106,6 +106,12 @@ export const ROUTE_ROLE_ACCESS: Record<string, Role[]> = {
   "/form-elements": ["ADMIN"], // Developer UI inputs showcase — restricted to Admin
   "/basic-tables": ["ADMIN"], // Developer UI table showcase — restricted to Admin
   "/blank": ["ADMIN"], // Generic template blank page — restricted to Admin
+
+  // Student Portal Modules
+  "/student/dashboard": ["STUDENT", "ADMIN"],
+  "/student/results": ["STUDENT", "ADMIN"],
+  "/student/fees": ["STUDENT", "ADMIN"],
+  "/student/attendance": ["STUDENT", "ADMIN"],
 
   // Shared Academic & User Routes
   "/calendar": ["ADMIN", "TEACHER", "STUDENT"], // Academic calendar (Admin manages; Teacher/Student view-only)

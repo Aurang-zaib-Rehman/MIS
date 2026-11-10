@@ -102,6 +102,7 @@ export interface AuthContextType {
   currentUser: AuthSession | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  loginAsRole: (role: Role) => AuthSession;
   login: (credentials: LoginCredentials) => Promise<{ success: boolean; error?: string; session?: AuthSession }>;
   logout: () => Promise<void>;
   hasRole: (roles: Role | Role[]) => boolean;

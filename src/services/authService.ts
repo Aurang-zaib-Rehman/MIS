@@ -2,133 +2,133 @@
  * Authentication Service
  * Phase 3 — Madrassa Management Information System (MIS)
  *
- * Provides a clean, abstracted asynchronous API for authentication and session management.
- * In this phase, this service interacts with mock credentials and localStorage.
- * When real backend APIs and JWT authentication are introduced later, ONLY this service
- * needs to be updated with fetch/axios calls; the UI components and AuthContext will remain untouched.
+ * In this development phase, 1-click role selection (ADMIN, TEACHER, STUDENT)
+ * is used to access corresponding dashboards without credentials.
+ *
+ * All mock passwords, signup mockups, and localStorage login data have been permanently removed.
+ * Only tab-scoped sessionStorage is used for active role retention across browser refreshes.
+ * When real backend APIs are introduced, this service will be wired to backend endpoints.
  */
 
 import type { AuthSession, LoginCredentials, Role } from "@/types/auth";
 import {
-  createSessionFromAccount,
+  getRoleSession,
   MOCK_CLASS_ATTENDANCE,
   MOCK_STUDENT_RECORDS,
-  MOCK_USERS,
+  ROLE_PROFILES,
   type MockClassAttendanceRecord,
   type MockStudentRecord,
 } from "./mockAuthData";
 
-// Centralized, versioned localStorage key for authentication sessions
-export const AUTH_STORAGE_KEY = "madrassa_auth_session_v1";
+// Tab-scoped key for active development role (Never stores credentials or passwords)
+export const DEV_ROLE_SESSION_KEY = "madrassa_dev_role";
+// Legacy localStorage key to purge permanently
+export const LEGACY_STORAGE_KEY = "madrassa_auth_session_v1";
 
 const VALID_ROLES: Role[] = ["ADMIN", "TEACHER", "STUDENT"];
 
 export class AuthService {
   /**
-   * Validates if a stored object adheres strictly to the AuthSession schema
+   * Permanently purge any legacy mock auth data from localStorage
    */
-  public static validateSession(data: unknown): data is AuthSession {
-    if (!data || typeof data !== "object") {
-      return false;
+  public static purgeLegacyStorage(): void {
+    if (typeof localStorage !== "undefined") {
+      try {
+        localStorage.removeItem(LEGACY_STORAGE_KEY);
+      } catch (e) {
+        console.warn("[AuthService] Could not clear legacy localStorage key:", e);
+      }
     }
-
-    const candidate = data as Record<string, unknown>;
-
-    const hasValidFields =
-      typeof candidate.userId === "string" &&
-      typeof candidate.name === "string" &&
-      typeof candidate.email === "string" &&
-      typeof candidate.role === "string" &&
-      VALID_ROLES.includes(candidate.role as Role) &&
-      typeof candidate.avatar === "string" &&
-      typeof candidate.loginTimestamp === "number";
-
-    return hasValidFields;
   }
 
   /**
-   * Retrieves and safely validates the active session from localStorage
+   * Retrieves the currently active role session from tab sessionStorage
    */
   public static getCurrentSession(): AuthSession | null {
-    if (typeof window === "undefined" && typeof localStorage === "undefined") {
+    this.purgeLegacyStorage();
+
+    if (typeof sessionStorage === "undefined") {
       return null;
     }
 
     try {
-      const raw = localStorage.getItem(AUTH_STORAGE_KEY);
-      if (!raw) {
+      const storedRole = sessionStorage.getItem(DEV_ROLE_SESSION_KEY) as Role | null;
+      if (!storedRole || !VALID_ROLES.includes(storedRole)) {
         return null;
       }
 
-      const parsed = JSON.parse(raw);
-      if (!this.validateSession(parsed)) {
-        // Corrupted, outdated, or tampered session data — purge safely
-        console.warn("[AuthService] Invalid or corrupted session detected. Purging session.");
-        this.clearSession();
-        return null;
-      }
-
-      return parsed;
+      return getRoleSession(storedRole);
     } catch (error) {
-      console.error("[AuthService] Failed to parse session JSON from localStorage:", error);
-      this.clearSession();
+      console.error("[AuthService] Failed to read active role from sessionStorage:", error);
       return null;
     }
   }
 
   /**
-   * Authenticates against mock credentials and creates a session
+   * 1-Click Role Login: Activates the requested role without credentials
    */
-  public static async login(credentials: LoginCredentials): Promise<AuthSession> {
-    // Simulate slight asynchronous network latency (150ms)
-    await new Promise((resolve) => setTimeout(resolve, 150));
+  public static loginAsRole(role: Role): AuthSession {
+    this.purgeLegacyStorage();
 
-    const normalizedEmail = (credentials.email || "").trim().toLowerCase();
-    const password = credentials.password || "";
+    const targetRole: Role = VALID_ROLES.includes(role) ? role : "ADMIN";
+    const session = getRoleSession(targetRole);
 
-    if (!normalizedEmail || !password) {
-      throw new Error("Email and password are required.");
-    }
-
-    const account = MOCK_USERS.find(
-      (u) => u.email.toLowerCase() === normalizedEmail && u.passwordHash === password,
-    );
-
-    if (!account) {
-      throw new Error("Invalid email or password. Please verify your credentials.");
-    }
-
-    // Create session (explicitly excludes passwords)
-    const session = createSessionFromAccount(account);
-
-    try {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
-    } catch (storageError) {
-      console.error("[AuthService] Failed to persist session to localStorage:", storageError);
+    if (typeof sessionStorage !== "undefined") {
+      try {
+        sessionStorage.setItem(DEV_ROLE_SESSION_KEY, targetRole);
+      } catch (e) {
+        console.error("[AuthService] Failed to persist role to sessionStorage:", e);
+      }
     }
 
     return session;
   }
 
   /**
-   * Terminates the active session and cleans up localStorage
+   * Standard login handler for compatibility (maps email/role directly to role session)
+   */
+  public static async login(credentials: LoginCredentials): Promise<AuthSession> {
+    this.purgeLegacyStorage();
+
+    const email = (credentials.email || "").toLowerCase().trim();
+    let role: Role = "ADMIN";
+
+    if (email.includes("teacher")) {
+      role = "TEACHER";
+    } else if (email.includes("student")) {
+      role = "STUDENT";
+    }
+
+    return this.loginAsRole(role);
+  }
+
+  /**
+   * Terminates active session and clears storage
    */
   public static async logout(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 50));
     this.clearSession();
   }
 
   /**
-   * Clears the authentication key from localStorage
+   * Clears all session and legacy storage
    */
   public static clearSession(): void {
-    if (typeof window !== "undefined" || typeof localStorage !== "undefined") {
+    this.purgeLegacyStorage();
+
+    if (typeof sessionStorage !== "undefined") {
       try {
-        localStorage.removeItem(AUTH_STORAGE_KEY);
+        sessionStorage.removeItem(DEV_ROLE_SESSION_KEY);
       } catch (e) {
-        console.error("[AuthService] Error clearing localStorage session:", e);
+        console.error("[AuthService] Failed to clear sessionStorage role:", e);
       }
     }
+  }
+
+  /**
+   * Direct role profile getter
+   */
+  public static getRoleProfile(role: Role): AuthSession {
+    return ROLE_PROFILES[role] || ROLE_PROFILES.ADMIN;
   }
 
   // =========================================================================
@@ -138,7 +138,7 @@ export class AuthService {
   /**
    * Demonstrates student data isolation:
    * - Students can ONLY view their own records.
-   * - Teachers cannot access student financial/grade ledger directly without assignment.
+   * - Teachers cannot access student private financial ledger directly.
    * - Admin can view all records.
    */
   public static getStudentRecords(session: AuthSession): MockStudentRecord[] {
@@ -152,14 +152,12 @@ export class AuthService {
       );
     }
 
-    // Other roles are blocked from student private ledger
     return [];
   }
 
   /**
    * Demonstrates teacher class assignment isolation:
-   * - Teachers can ONLY view and mark attendance for their assigned classes.
-   * - Students cannot access attendance management.
+   * - Teachers can ONLY view their assigned classes.
    * - Admin can view all attendance logs.
    */
   public static getClassAttendanceRecords(session: AuthSession): MockClassAttendanceRecord[] {
@@ -173,7 +171,6 @@ export class AuthService {
       );
     }
 
-    // Students have no access to attendance administration
     return [];
   }
 }

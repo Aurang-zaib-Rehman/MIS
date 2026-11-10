@@ -31,6 +31,12 @@ import NotFound from "./pages/OtherPage/NotFound";
 import LineChart from "./pages/Charts/LineChart";
 import BarChart from "./pages/Charts/BarChart";
 
+// Student Portal Pages
+import StudentDashboard from "./pages/Student/StudentDashboard";
+import StudentResults from "./pages/Student/StudentResults";
+import StudentFeeRecord from "./pages/Student/StudentFeeRecord";
+import StudentAttendance from "./pages/Student/StudentAttendance";
+
 // UI Elements
 import Alerts from "./pages/UiElements/Alerts";
 import Avatars from "./pages/UiElements/Avatars";
@@ -65,6 +71,12 @@ export default function App() {
             }
           >
             <Route path="/dashboard" element={<DashboardHome />} />
+
+            {/* Student Portal Routes */}
+            <Route path="/student/dashboard" element={<StudentDashboard />} />
+            <Route path="/student/results" element={<StudentResults />} />
+            <Route path="/student/fees" element={<StudentFeeRecord />} />
+            <Route path="/student/attendance" element={<StudentAttendance />} />
 
             {/* Other Pages */}
             <Route path="/profile" element={<UserProfiles />} />

@@ -1,11 +1,14 @@
 import { useSidebar } from "@/context/SidebarContext";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router";
 import {
   BoxCubeIcon,
   CalenderIcon,
+  CheckLineIcon,
   ChevronDownIcon,
+  DollarLineIcon,
   GridIcon,
   HorizontaLDots,
   ListIcon,
@@ -13,6 +16,7 @@ import {
   PieChartIcon,
   PlugInIcon,
   TableIcon,
+  TaskIcon,
   UserCircleIcon,
 } from "../icons";
 import { cn } from "../utils";
@@ -120,11 +124,75 @@ const othersItems: NavItem[] = [
   },
 ];
 
+// Student Role Dedicated Navigation
+const studentNavItems: NavItem[] = [
+  {
+    icon: <GridIcon fontSize={24} />,
+    name: "Dashboard",
+    key: "studentDashboard",
+    path: "/student/dashboard",
+  },
+  {
+    icon: <TaskIcon fontSize={24} />,
+    name: "Result",
+    key: "studentResults",
+    path: "/student/results",
+  },
+  {
+    icon: <DollarLineIcon fontSize={24} />,
+    name: "Fees",
+    key: "studentFees",
+    path: "/student/fees",
+  },
+  {
+    icon: <CheckLineIcon fontSize={24} />,
+    name: "Attendance",
+    key: "studentAttendance",
+    path: "/student/attendance",
+  },
+  {
+    icon: <UserCircleIcon fontSize={24} />,
+    name: "Profile",
+    key: "studentProfile",
+    path: "/profile",
+  },
+];
+
+// Teacher Role Dedicated Navigation
+const teacherNavItems: NavItem[] = [
+  {
+    icon: <CalenderIcon fontSize={24} />,
+    name: "Schedule & Timetable",
+    key: "teacherCalendar",
+    path: "/calendar",
+  },
+  {
+    icon: <UserCircleIcon fontSize={24} />,
+    name: "My Profile",
+    key: "teacherProfile",
+    path: "/profile",
+  },
+];
+
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered, setIsMobileOpen } =
     useSidebar();
+  const { currentUser } = useAuth();
+  const currentRole = currentUser?.role || "ADMIN";
   const { t } = useTranslation();
   const location = useLocation();
+
+  const activeNavItems = useMemo(() => {
+    if (currentRole === "STUDENT") return studentNavItems;
+    if (currentRole === "TEACHER") return teacherNavItems;
+    return navItems;
+  }, [currentRole]);
+
+  const activeOthersItems = useMemo(() => {
+    if (currentRole === "STUDENT" || currentRole === "TEACHER") return [];
+    return othersItems;
+  }, [currentRole]);
+
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
     index: number;
@@ -152,7 +220,7 @@ const AppSidebar: React.FC = () => {
     let submenuMatched = false;
 
     ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
+      const items = menuType === "main" ? activeNavItems : activeOthersItems;
 
       items.forEach((nav, index) => {
         if (nav.subItems) {
@@ -173,7 +241,7 @@ const AppSidebar: React.FC = () => {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setOpenSubmenu(null);
     }
-  }, [location, isActive]);
+  }, [location, isActive, activeNavItems, activeOthersItems]);
 
   useEffect(() => {
     if (openSubmenu !== null) {
@@ -229,7 +297,7 @@ const AppSidebar: React.FC = () => {
 
               {(isExpanded || isHovered || isMobileOpen) && (
                 <span className="menu-item-text">
-                  {nav.key ? t(`sidebar.items.${nav.key}`) : nav.name}
+                  {nav.key ? t(`sidebar.items.${nav.key}`, { defaultValue: nav.name }) : nav.name}
                 </span>
               )}
               {nav.new && (isExpanded || isHovered || isMobileOpen) && (
@@ -275,7 +343,7 @@ const AppSidebar: React.FC = () => {
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className="menu-item-text">
-                    {nav.key ? t(`sidebar.items.${nav.key}`) : nav.name}
+                    {nav.key ? t(`sidebar.items.${nav.key}`, { defaultValue: nav.name }) : nav.name}
                   </span>
                 )}
               </Link>
@@ -403,30 +471,36 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  t("sidebar.groups.menu")
+                  currentRole === "STUDENT"
+                    ? "Student Portal"
+                    : currentRole === "TEACHER"
+                    ? "Faculty Portal"
+                    : t("sidebar.groups.menu")
                 ) : (
                   <HorizontaLDots className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
+              {renderMenuItems(activeNavItems, "main")}
             </div>
 
-            <div>
-              <h2
-                className={`mb-4 flex text-xs leading-5 text-gray-400 uppercase ${
-                  !isExpanded && !isHovered
-                    ? "xl:justify-center"
-                    : "justify-start"
-                }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  t("sidebar.groups.others")
-                ) : (
-                  <HorizontaLDots className="size-6" />
-                )}
-              </h2>
-              {renderMenuItems(othersItems, "others")}
-            </div>
+            {activeOthersItems.length > 0 && (
+              <div>
+                <h2
+                  className={`mb-4 flex text-xs leading-5 text-gray-400 uppercase ${
+                    !isExpanded && !isHovered
+                      ? "xl:justify-center"
+                      : "justify-start"
+                  }`}
+                >
+                  {isExpanded || isHovered || isMobileOpen ? (
+                    t("sidebar.groups.others")
+                  ) : (
+                    <HorizontaLDots className="size-6" />
+                  )}
+                </h2>
+                {renderMenuItems(activeOthersItems, "others")}
+              </div>
+            )}
           </div>
         </nav>
       </div>

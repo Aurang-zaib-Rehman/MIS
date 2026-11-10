@@ -3,17 +3,17 @@ import Checkbox from "@/components/form/input/Checkbox";
 import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 import Alert from "@/components/ui/alert/Alert";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
+import { ChevronLeftIcon, EyeCloseIcon, EyeIcon, DashboardAltIcon, CalendarAltIcon, UserCircleIcon } from "@/icons";
 import { MotionFadeIn } from "@/components/public/Motion";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "@/context/AuthContext";
-import { DEMO_ACCOUNTS } from "@/services/mockAuthData";
+import type { Role } from "@/types/auth";
 
 export default function SignInForm() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentUser, isAuthenticated, login, getRoleDefaultPath } = useAuth();
+  const { currentUser, isAuthenticated, loginAsRole, login, getRoleDefaultPath } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,13 +33,23 @@ export default function SignInForm() {
     }
   }, [isAuthenticated, currentUser, navigate, location.state, getRoleDefaultPath]);
 
-  // Quick fill helper for Phase 3 testing
-  const handleQuickFill = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
+  // 1-Click Direct Role Login handler
+  const handleRoleSelect = (role: Role) => {
     setErrorMessage(null);
+    setSuccessMessage(`Entering as ${role}...`);
+    const session = loginAsRole(role);
+
+    const requestedPath = (location.state as { from?: { pathname?: string } })?.from?.pathname;
+    const destination = requestedPath && requestedPath !== "/signin"
+      ? requestedPath
+      : getRoleDefaultPath(session.role);
+
+    setTimeout(() => {
+      navigate(destination, { replace: true });
+    }, 150);
   };
 
+  // Standard form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -50,30 +60,25 @@ export default function SignInForm() {
       setErrorMessage("Please enter your registered email address.");
       return;
     }
-    if (!password) {
-      setErrorMessage("Please enter your password.");
-      return;
-    }
 
     setIsSubmitting(true);
     try {
       const response = await login({ email: trimmedEmail, password });
       if (response.success && response.session) {
-        setSuccessMessage(`Welcome back, ${response.session.name}! Redirecting...`);
-        
-        // Prioritize requested URL from state, otherwise use role default landing
-        const destination =
-          (location.state as { from?: { pathname?: string } })?.from?.pathname ||
-          getRoleDefaultPath(response.session.role);
+        setSuccessMessage(`Welcome back! Redirecting...`);
+        const requestedPath = (location.state as { from?: { pathname?: string } })?.from?.pathname;
+        const destination = requestedPath && requestedPath !== "/signin"
+          ? requestedPath
+          : getRoleDefaultPath(response.session.role);
 
         setTimeout(() => {
           navigate(destination, { replace: true });
-        }, 350);
+        }, 150);
       } else {
-        setErrorMessage(response.error || "Authentication failed. Please verify your credentials.");
+        setErrorMessage(response.error || "Authentication failed. Please try again.");
       }
     } catch {
-      setErrorMessage("An unexpected error occurred during sign in. Please try again.");
+      setErrorMessage("An unexpected error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -81,7 +86,7 @@ export default function SignInForm() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="mx-auto w-full max-w-md pt-10">
+      <div className="mx-auto w-full max-w-md pt-8">
         <Link
           to="/"
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
@@ -94,72 +99,58 @@ export default function SignInForm() {
       <MotionFadeIn
         direction="left"
         duration={0.4}
-        className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center"
+        className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-6"
       >
         <div>
-          <div className="mb-5 sm:mb-8">
-            <h1 className="mb-2 text-title-sm font-semibold text-gray-800 sm:text-title-md dark:text-white/90">
+          <div className="mb-5 sm:mb-6">
+            <h1 className="mb-1 text-title-sm font-semibold text-gray-800 sm:text-title-md dark:text-white/90">
               Sign In to Madrassa MIS
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your credentials to access your academic dashboard.
+              Select your role directly or sign in with your credentials.
             </p>
           </div>
 
-          {/* Demo Account Selector Pills (Phase 3 Testing) */}
+          {/* 3 Temporary Role Buttons at the Top of Login Form */}
           <div className="mb-6 rounded-xl border border-dashed border-brand-300 bg-brand-50/50 p-3.5 dark:border-brand-500/30 dark:bg-brand-500/10">
-            <div className="mb-2 flex items-center justify-between">
+            <div className="mb-2.5 flex items-center justify-between">
               <span className="text-theme-xs font-semibold uppercase tracking-wider text-brand-700 dark:text-brand-300">
-                Phase 3 Demo Accounts
+                1-Click Direct Role Access
               </span>
               <span className="text-[11px] text-gray-500 dark:text-gray-400">
-                Click to Auto-Fill
+                Opens Dashboard
               </span>
             </div>
+
             <div className="grid grid-cols-3 gap-2">
+              {/* Admin Button */}
               <button
                 type="button"
-                onClick={() =>
-                  handleQuickFill(DEMO_ACCOUNTS.ADMIN.email, DEMO_ACCOUNTS.ADMIN.password)
-                }
-                className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white py-1.5 px-2 text-center transition-all hover:border-brand-500 hover:bg-brand-50 hover:shadow-xs active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-brand-500/20"
+                onClick={() => handleRoleSelect("ADMIN")}
+                className="flex items-center justify-center gap-1.5 rounded-lg border border-brand-200 bg-white py-2 px-2.5 text-xs font-semibold text-brand-700 shadow-xs transition-all hover:bg-brand-500 hover:text-white hover:border-brand-500 active:scale-95 dark:border-brand-500/30 dark:bg-gray-800 dark:text-brand-300 dark:hover:bg-brand-500 dark:hover:text-white"
               >
-                <span className="text-theme-xs font-bold text-gray-800 dark:text-gray-200">
-                  Admin
-                </span>
-                <span className="text-[10px] text-gray-500 dark:text-gray-400">
-                  Full Control
-                </span>
+                <DashboardAltIcon className="size-4 shrink-0" />
+                <span>Admin</span>
               </button>
 
+              {/* Teacher Button */}
               <button
                 type="button"
-                onClick={() =>
-                  handleQuickFill(DEMO_ACCOUNTS.TEACHER.email, DEMO_ACCOUNTS.TEACHER.password)
-                }
-                className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white py-1.5 px-2 text-center transition-all hover:border-brand-500 hover:bg-brand-50 hover:shadow-xs active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-brand-500/20"
+                onClick={() => handleRoleSelect("TEACHER")}
+                className="flex items-center justify-center gap-1.5 rounded-lg border border-blue-light-200 bg-white py-2 px-2.5 text-xs font-semibold text-blue-light-700 shadow-xs transition-all hover:bg-blue-light-500 hover:text-white hover:border-blue-light-500 active:scale-95 dark:border-blue-light-500/30 dark:bg-gray-800 dark:text-blue-light-300 dark:hover:bg-blue-light-500 dark:hover:text-white"
               >
-                <span className="text-theme-xs font-bold text-gray-800 dark:text-gray-200">
-                  Teacher
-                </span>
-                <span className="text-[10px] text-gray-500 dark:text-gray-400">
-                  Academic
-                </span>
+                <CalendarAltIcon className="size-4 shrink-0" />
+                <span>Teacher</span>
               </button>
 
+              {/* Student Button */}
               <button
                 type="button"
-                onClick={() =>
-                  handleQuickFill(DEMO_ACCOUNTS.STUDENT.email, DEMO_ACCOUNTS.STUDENT.password)
-                }
-                className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white py-1.5 px-2 text-center transition-all hover:border-brand-500 hover:bg-brand-50 hover:shadow-xs active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-brand-500/20"
+                onClick={() => handleRoleSelect("STUDENT")}
+                className="flex items-center justify-center gap-1.5 rounded-lg border border-success-200 bg-white py-2 px-2.5 text-xs font-semibold text-success-700 shadow-xs transition-all hover:bg-success-500 hover:text-white hover:border-success-500 active:scale-95 dark:border-success-500/30 dark:bg-gray-800 dark:text-success-300 dark:hover:bg-success-500 dark:hover:text-white"
               >
-                <span className="text-theme-xs font-bold text-gray-800 dark:text-gray-200">
-                  Student
-                </span>
-                <span className="text-[10px] text-gray-500 dark:text-gray-400">
-                  Portal
-                </span>
+                <UserCircleIcon className="size-4 shrink-0" />
+                <span>Student</span>
               </button>
             </div>
           </div>
@@ -173,13 +164,22 @@ export default function SignInForm() {
 
           {successMessage && (
             <div className="mb-4">
-              <Alert variant="success" title="Authenticated" message={successMessage} />
+              <Alert variant="success" title="Access Granted" message={successMessage} />
             </div>
           )}
 
+          {/* Divider */}
+          <div className="relative my-4 flex items-center justify-center">
+            <div className="w-full border-t border-gray-200 dark:border-gray-800" />
+            <span className="absolute bg-white px-3 text-xs text-gray-400 dark:bg-gray-900">
+              Or Sign In with Email
+            </span>
+          </div>
+
+          {/* Template Login Form */}
           <div>
             <form onSubmit={handleSubmit}>
-              <div className="space-y-5">
+              <div className="space-y-4">
                 <div>
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}
@@ -198,7 +198,7 @@ export default function SignInForm() {
 
                 <div>
                   <Label>
-                    Password <span className="text-error-500">*</span>{" "}
+                    Password
                   </Label>
                   <div className="relative">
                     <Input
@@ -255,7 +255,7 @@ export default function SignInForm() {
 
             <div className="mt-5">
               <p className="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
-                Don&apos;t have an account? {""}
+                Don&apos;t have an account?{" "}
                 <Link
                   to="/signup"
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"

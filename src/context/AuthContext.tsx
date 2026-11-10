@@ -22,6 +22,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Direct 1-Click Role Login Handler (Development Mode)
+  const loginAsRole = useCallback((role: Role): AuthSession => {
+    const session = AuthService.loginAsRole(role);
+    setCurrentUser(session);
+    return session;
+  }, []);
+
   // Login handler
   const login = useCallback(async (credentials: LoginCredentials) => {
     setIsLoading(true);
@@ -85,6 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     currentUser,
     isAuthenticated: Boolean(currentUser),
     isLoading,
+    loginAsRole,
     login,
     logout,
     hasRole,
@@ -96,6 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 // Re-export useAuth hook for backwards compatibility
+// eslint-disable-next-line react-refresh/only-export-components
 export { useAuth } from "@/hooks/useAuth";
 
 export default AuthContext;

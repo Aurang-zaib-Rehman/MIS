@@ -4,11 +4,13 @@ import DangerZone from "@/components/UserProfile/DangerZone";
 import Security from "@/components/UserProfile/Security";
 import UserAddressCard from "@/components/UserProfile/UserAddressCard";
 import UserMetaCard from "@/components/UserProfile/UserMetaCard";
+import StudentIdCard from "@/components/student/StudentIdCard";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function UserProfiles() {
   const { currentUser } = useAuth();
   const isAdmin = currentUser?.role === "ADMIN";
+  const isStudent = currentUser?.role === "STUDENT";
 
   return (
     <>
@@ -22,6 +24,7 @@ export default function UserProfiles() {
           User Identity & Credentials
         </h3>
         <div className="space-y-6">
+          {isStudent && <StudentIdCard />}
           <UserMetaCard />
           <UserAddressCard />
           <Security />
