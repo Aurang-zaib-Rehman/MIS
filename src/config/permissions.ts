@@ -85,7 +85,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
  */
 export const ROLE_DEFAULT_REDIRECTS: Record<Role, string> = {
   ADMIN: "/dashboard",
-  TEACHER: "/calendar",
+  TEACHER: "/teacher/dashboard",
   STUDENT: "/student/dashboard",
 };
 
@@ -112,6 +112,11 @@ export const ROUTE_ROLE_ACCESS: Record<string, Role[]> = {
   "/student/results": ["STUDENT", "ADMIN"],
   "/student/fees": ["STUDENT", "ADMIN"],
   "/student/attendance": ["STUDENT", "ADMIN"],
+
+  // Teacher Portal Modules
+  "/teacher/dashboard": ["TEACHER", "ADMIN"],
+  "/teacher/attendance": ["TEACHER", "ADMIN"],
+  "/teacher/results": ["TEACHER", "ADMIN"],
 
   // Shared Academic & User Routes
   "/calendar": ["ADMIN", "TEACHER", "STUDENT"], // Academic calendar (Admin manages; Teacher/Student view-only)

@@ -98,13 +98,13 @@ export async function runTests() {
     assert.equal("passwordHash" in session, false);
   });
 
-  test("2.2 Teacher 1-click role activation creates session and lands at /calendar", () => {
+  test("2.2 Teacher 1-click role activation creates session and lands at /teacher/dashboard", () => {
     sessionStorage.clear();
     const session = AuthService.loginAsRole("TEACHER");
 
     assert.equal(session.role, "TEACHER");
     assert.equal(session.email, "teacher@madrassa.com");
-    assert.equal(ROLE_DEFAULT_REDIRECTS[session.role], "/calendar");
+    assert.equal(ROLE_DEFAULT_REDIRECTS[session.role], "/teacher/dashboard");
     assert.equal(session.teacherProfile?.teacherId, "TCH-004");
     assert.equal(Array.isArray(session.teacherProfile?.assignedClasses), true);
   });
@@ -237,7 +237,10 @@ export async function runTests() {
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/blank"), false);
   });
 
-  test("5.4 TEACHER direct URL access — Allowed only genuine academic routes (/calendar, /profile)", () => {
+  test("5.4 TEACHER direct URL access — Allowed academic & teacher portal routes (/teacher/*, /profile, /calendar)", () => {
+    assert.equal(isRouteAuthorizedForRole("TEACHER", "/teacher/dashboard"), true);
+    assert.equal(isRouteAuthorizedForRole("TEACHER", "/teacher/attendance"), true);
+    assert.equal(isRouteAuthorizedForRole("TEACHER", "/teacher/results"), true);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/calendar"), true);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/profile"), true);
 
@@ -257,6 +260,8 @@ export async function runTests() {
 
     // Blocked from admin & teacher management routes
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/dashboard"), false);
+    assert.equal(isRouteAuthorizedForRole("STUDENT", "/teacher/attendance"), false);
+    assert.equal(isRouteAuthorizedForRole("STUDENT", "/teacher/results"), false);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/alerts"), false);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/badge"), false);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/form-elements"), false);

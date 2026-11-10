@@ -161,14 +161,26 @@ const studentNavItems: NavItem[] = [
 // Teacher Role Dedicated Navigation
 const teacherNavItems: NavItem[] = [
   {
-    icon: <CalenderIcon fontSize={24} />,
-    name: "Schedule & Timetable",
-    key: "teacherCalendar",
-    path: "/calendar",
+    icon: <GridIcon fontSize={24} />,
+    name: "Dashboard",
+    key: "teacherDashboard",
+    path: "/teacher/dashboard",
+  },
+  {
+    icon: <CheckLineIcon fontSize={24} />,
+    name: "Attendance",
+    key: "teacherAttendance",
+    path: "/teacher/attendance",
+  },
+  {
+    icon: <TaskIcon fontSize={24} />,
+    name: "Results",
+    key: "teacherResults",
+    path: "/teacher/results",
   },
   {
     icon: <UserCircleIcon fontSize={24} />,
-    name: "My Profile",
+    name: "Profile",
     key: "teacherProfile",
     path: "/profile",
   },

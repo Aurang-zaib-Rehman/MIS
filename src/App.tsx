@@ -37,6 +37,11 @@ import StudentResults from "./pages/Student/StudentResults";
 import StudentFeeRecord from "./pages/Student/StudentFeeRecord";
 import StudentAttendance from "./pages/Student/StudentAttendance";
 
+// Teacher Portal Pages
+import TeacherDashboard from "./pages/Teacher/TeacherDashboard";
+import TeacherAttendancePage from "./pages/Teacher/TeacherAttendancePage";
+import TeacherResultsPage from "./pages/Teacher/TeacherResultsPage";
+
 // UI Elements
 import Alerts from "./pages/UiElements/Alerts";
 import Avatars from "./pages/UiElements/Avatars";
@@ -77,6 +82,11 @@ export default function App() {
             <Route path="/student/results" element={<StudentResults />} />
             <Route path="/student/fees" element={<StudentFeeRecord />} />
             <Route path="/student/attendance" element={<StudentAttendance />} />
+
+            {/* Teacher Portal Routes */}
+            <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
+            <Route path="/teacher/attendance" element={<TeacherAttendancePage />} />
+            <Route path="/teacher/results" element={<TeacherResultsPage />} />
 
             {/* Other Pages */}
             <Route path="/profile" element={<UserProfiles />} />
