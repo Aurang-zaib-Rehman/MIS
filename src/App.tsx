@@ -37,7 +37,6 @@ import Avatars from "./pages/UiElements/Avatars";
 import Badges from "./pages/UiElements/Badges";
 import Buttons from "./pages/UiElements/Buttons";
 import Images from "./pages/UiElements/Images";
-import Videos from "./pages/UiElements/Videos";
 
 export default function App() {
   return (
@@ -84,7 +83,6 @@ export default function App() {
             <Route path="/badge" element={<Badges />} />
             <Route path="/buttons" element={<Buttons />} />
             <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} />
 
             {/* Charts */}
             <Route path="/line-chart" element={<LineChart />} />

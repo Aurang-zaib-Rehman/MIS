@@ -101,7 +101,6 @@ export const ROUTE_ROLE_ACCESS: Record<string, Role[]> = {
   "/badge": ["ADMIN"],
   "/buttons": ["ADMIN"],
   "/images": ["ADMIN"],
-  "/videos": ["ADMIN"],
   "/line-chart": ["ADMIN"],
   "/bar-chart": ["ADMIN"],
   "/form-elements": ["ADMIN"], // Developer UI inputs showcase — restricted to Admin

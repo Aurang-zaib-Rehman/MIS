@@ -299,7 +299,6 @@ export async function runTests() {
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/badge"), true);
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/buttons"), true);
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/images"), true);
-    assert.equal(isRouteAuthorizedForRole("ADMIN", "/videos"), true);
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/calendar"), true);
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/profile"), true);
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/form-elements"), true);

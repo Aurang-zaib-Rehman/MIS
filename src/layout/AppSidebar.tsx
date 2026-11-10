@@ -16,7 +16,6 @@ import {
   UserCircleIcon,
 } from "../icons";
 import { cn } from "../utils";
-import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
   name: string;
@@ -108,7 +107,6 @@ const othersItems: NavItem[] = [
       { name: "Badge", key: "badge", path: "/badge", pro: false },
       { name: "Buttons", key: "buttons", path: "/buttons", pro: false },
       { name: "Images", key: "images", path: "/images", pro: false },
-      { name: "Videos", key: "videos", path: "/videos", pro: false },
     ],
   },
   {
@@ -172,6 +170,7 @@ const AppSidebar: React.FC = () => {
     });
 
     if (!submenuMatched) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOpenSubmenu(null);
     }
   }, [location, isActive]);
@@ -430,8 +429,6 @@ const AppSidebar: React.FC = () => {
             </div>
           </div>
         </nav>
-
-        {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
       </div>
     </aside>
   );
