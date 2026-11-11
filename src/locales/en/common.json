@@ -21,6 +21,7 @@
     },
     "items": {
       "dashboard": "Dashboard",
+      "adminAttendance": "Student Attendance",
       "studentDashboard": "Dashboard",
       "studentResults": "Result",
       "studentFees": "Fees",
@@ -57,7 +58,7 @@
       "transactions": "Transactions",
       "singleTransaction": "Single Transaction",
       "calendar": "Calendar",
-      "userProfile": "User Profile",
+      "userProfile": "Profile",
       "task": "Task",
       "taskList": "List",
       "kanban": "Kanban",

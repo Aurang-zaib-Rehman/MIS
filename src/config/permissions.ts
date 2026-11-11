@@ -96,6 +96,7 @@ export const ROLE_DEFAULT_REDIRECTS: Record<Role, string> = {
 export const ROUTE_ROLE_ACCESS: Record<string, Role[]> = {
   // Admin Superuser Exclusive Modules
   "/dashboard": ["ADMIN"],
+  "/attendance": ["ADMIN"],
   "/alerts": ["ADMIN"],
   "/avatars": ["ADMIN"],
   "/badge": ["ADMIN"],

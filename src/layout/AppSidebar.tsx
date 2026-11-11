@@ -4,18 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router";
 import {
-  BoxCubeIcon,
-  CalenderIcon,
   CheckLineIcon,
   ChevronDownIcon,
   DollarLineIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
   TaskIcon,
   UserCircleIcon,
 } from "../icons";
@@ -43,84 +36,19 @@ const navItems: NavItem[] = [
     icon: <GridIcon fontSize={24} />,
     name: "Dashboard",
     key: "dashboard",
-    subItems: [{ name: "Ecommerce", key: "ecommerceHome", path: "/dashboard" }],
+    path: "/dashboard",
   },
   {
-    icon: <CalenderIcon fontSize={24} />,
-    name: "Calendar",
-    key: "calendar",
-    path: "/calendar",
+    icon: <CheckLineIcon fontSize={24} />,
+    name: "Student Attendance",
+    key: "adminAttendance",
+    path: "/attendance",
   },
   {
     icon: <UserCircleIcon fontSize={24} />,
-    name: "User Profile",
+    name: "Profile",
     key: "userProfile",
     path: "/profile",
-  },
-  {
-    name: "Forms",
-    key: "forms",
-    icon: <ListIcon fontSize={24} />,
-    subItems: [
-      {
-        name: "Form Elements",
-        key: "formElements",
-        path: "/form-elements",
-        pro: false,
-      },
-    ],
-  },
-  {
-    name: "Tables",
-    key: "tables",
-    icon: <TableIcon fontSize={24} />,
-    subItems: [
-      {
-        name: "Basic Tables",
-        key: "basicTables",
-        path: "/basic-tables",
-        pro: false,
-      },
-    ],
-  },
-  {
-    name: "Pages",
-    key: "pages",
-    icon: <PageIcon fontSize={24} />,
-    subItems: [{ name: "Blank Page", key: "blankPage", path: "/blank" }],
-  },
-];
-
-const othersItems: NavItem[] = [
-  {
-    icon: <PieChartIcon fontSize={24} />,
-    name: "Charts",
-    key: "charts",
-    subItems: [
-      { name: "Line Chart", key: "lineChart", path: "/line-chart" },
-      { name: "Bar Chart", key: "barChart", path: "/bar-chart" },
-    ],
-  },
-  {
-    icon: <BoxCubeIcon fontSize={24} />,
-    name: "UI Elements",
-    key: "uiElements",
-    subItems: [
-      { name: "Alerts", key: "alerts", path: "/alerts", pro: false },
-      { name: "Avatar", key: "avatar", path: "/avatars", pro: false },
-      { name: "Badge", key: "badge", path: "/badge", pro: false },
-      { name: "Buttons", key: "buttons", path: "/buttons", pro: false },
-      { name: "Images", key: "images", path: "/images", pro: false },
-    ],
-  },
-  {
-    icon: <PlugInIcon fontSize={24} />,
-    name: "Authentication",
-    key: "authentication",
-    subItems: [
-      { name: "Sign In", key: "signIn", path: "/signin", pro: false },
-      { name: "Sign Up", key: "signUp", path: "/signup", pro: false },
-    ],
   },
 ];
 
@@ -201,9 +129,8 @@ const AppSidebar: React.FC = () => {
   }, [currentRole]);
 
   const activeOthersItems = useMemo(() => {
-    if (currentRole === "STUDENT" || currentRole === "TEACHER") return [];
-    return othersItems;
-  }, [currentRole]);
+    return [];
+  }, []);
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -487,7 +414,7 @@ const AppSidebar: React.FC = () => {
                     ? "Student Portal"
                     : currentRole === "TEACHER"
                     ? "Faculty Portal"
-                    : t("sidebar.groups.menu")
+                    : "Admin Portal"
                 ) : (
                   <HorizontaLDots className="size-6" />
                 )}

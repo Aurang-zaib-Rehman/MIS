@@ -20,6 +20,7 @@ import Unauthorized from "./pages/OtherPage/Unauthorized";
 
 // Dashboard & Internal Pages
 import DashboardHome from "./pages/Dashboard/Ecommerce";
+import AdminAttendancePage from "./pages/Admin/AdminAttendancePage";
 import UserProfiles from "./pages/UserProfiles";
 import Calendar from "./pages/Calendar";
 import FormElements from "./pages/Forms/FormElements";
@@ -76,6 +77,7 @@ export default function App() {
             }
           >
             <Route path="/dashboard" element={<DashboardHome />} />
+            <Route path="/attendance" element={<AdminAttendancePage />} />
 
             {/* Student Portal Routes */}
             <Route path="/student/dashboard" element={<StudentDashboard />} />

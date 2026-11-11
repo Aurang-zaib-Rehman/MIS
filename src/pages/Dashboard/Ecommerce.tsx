@@ -1,40 +1,27 @@
+import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import PageMeta from "@/components/common/PageMeta";
-import DemographicCard from "@/components/ecommerce/DemographicCard";
-import EcommerceMetrics from "@/components/ecommerce/EcommerceMetrics";
-import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
-import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
-import RecentOrders from "@/components/ecommerce/RecentOrders";
-import StatisticsChart from "@/components/ecommerce/StatisticsChart";
+import AdminMetrics from "@/components/admin/AdminMetrics";
+import AcademicOverviewCard from "@/components/admin/AcademicOverviewCard";
+import RecentApplicationsTable from "@/components/admin/RecentApplicationsTable";
 
 export default function Ecommerce() {
   return (
     <>
       <PageMeta
-        title="React.js Ecommerce Dashboard | TailAdmin - React.js Admin Dashboard Template"
-        description="This is React.js Ecommerce Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title="Admin Institutional Dashboard | Madrassa MIS"
+        description="Central administrative dashboard for Jamia Madrassa Uloom-e-Islamia: student counts, faculty staff, donor funds, expense metrics, academic overview, and admission intake."
       />
-      <div className="grid grid-cols-12 gap-4 md:gap-6">
-        <div className="col-span-12 space-y-6 xl:col-span-7">
-          <EcommerceMetrics />
+      <PageBreadcrumb pageTitle="Admin Institutional Dashboard" />
 
-          <MonthlySalesChart />
-        </div>
+      <div className="space-y-6">
+        {/* 1. Top 4 Metric Cards: Total Students, Total Staff, Total Donations, Total Expense */}
+        <AdminMetrics />
 
-        <div className="col-span-12 xl:col-span-5">
-          <MonthlyTarget />
-        </div>
+        {/* 2. Full-Screen Card: Academic Overview (Left: Beautiful Pie Chart, Right: Key Features) */}
+        <AcademicOverviewCard />
 
-        <div className="col-span-12">
-          <StatisticsChart />
-        </div>
-
-        <div className="col-span-12 xl:col-span-5">
-          <DemographicCard />
-        </div>
-
-        <div className="col-span-12 xl:col-span-7">
-          <RecentOrders />
-        </div>
+        {/* 3. Recent Admission Applications Table (5 entries, right bottom 'See All' expander) */}
+        <RecentApplicationsTable />
       </div>
     </>
   );

@@ -213,6 +213,7 @@ export async function runTests() {
 
   test("5.2 ADMIN is authorized ONLY for explicitly registered application routes", () => {
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/dashboard"), true);
+    assert.equal(isRouteAuthorizedForRole("ADMIN", "/attendance"), true);
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/line-chart"), true);
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/bar-chart"), true);
     assert.equal(isRouteAuthorizedForRole("ADMIN", "/alerts"), true);
@@ -246,6 +247,7 @@ export async function runTests() {
 
     // Blocked from admin routes
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/dashboard"), false);
+    assert.equal(isRouteAuthorizedForRole("TEACHER", "/attendance"), false);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/alerts"), false);
     assert.equal(isRouteAuthorizedForRole("TEACHER", "/line-chart"), false);
   });
@@ -260,6 +262,7 @@ export async function runTests() {
 
     // Blocked from admin & teacher management routes
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/dashboard"), false);
+    assert.equal(isRouteAuthorizedForRole("STUDENT", "/attendance"), false);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/teacher/attendance"), false);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/teacher/results"), false);
     assert.equal(isRouteAuthorizedForRole("STUDENT", "/alerts"), false);
